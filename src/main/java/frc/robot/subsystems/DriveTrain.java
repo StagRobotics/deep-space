@@ -11,8 +11,11 @@ import frc.robot.Robot;
 import frc.robot.RobotMap;
 import frc.robot.commands.TankDriveWithJoystick;
 
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+
 import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.PWMVictorSPX;
 import edu.wpi.first.wpilibj.Relay;
 import edu.wpi.first.wpilibj.RobotDrive;
 import edu.wpi.first.wpilibj.SPI;
@@ -28,8 +31,8 @@ public class DriveTrain extends Subsystem {
 	public int WHEEL_DIAMETER = 5; // In Inches
 	public double DEADBAND = 0.20;
 	
-	public SpeedController leftMotor = new Spark(RobotMap.leftMotor);
-	public SpeedController rightMotor = new Spark(RobotMap.rightMotor);
+	public PWMVictorSPX leftMotor = new PWMVictorSPX(RobotMap.leftMotor);
+	public PWMVictorSPX rightMotor = new PWMVictorSPX(RobotMap.rightMotor);
 
 	public ADXRS450_Gyro gyro = new ADXRS450_Gyro(SPI.Port.kOnboardCS0);
 
