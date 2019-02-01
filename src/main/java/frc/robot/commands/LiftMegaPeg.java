@@ -9,8 +9,10 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.command.Command;
 import frc.robot.Robot;
+import edu.wpi.first.wpilibj.Timer;
 
 public class LiftMegaPeg extends Command {
+  Timer moveTimer = new Timer();
   public LiftMegaPeg() {
     requires(Robot.m_megapeg);
   }
@@ -18,6 +20,8 @@ public class LiftMegaPeg extends Command {
   // Called just before this Command runs the first time
   @Override
   protected void initialize() {
+    moveTimer.reset();
+    moveTimer.start();
   }
 
   // Called repeatedly when this Command is scheduled to run
@@ -29,7 +33,7 @@ public class LiftMegaPeg extends Command {
   // Make this return true when this Command no longer needs to run execute()
   @Override
   protected boolean isFinished() {
-    if(Robot.m_megapeg.getY()*90*-1 >= 45){
+    if(moveTimer.get() >= 1){
       return true;
     }
     else{
@@ -47,5 +51,6 @@ public class LiftMegaPeg extends Command {
   // subsystems is scheduled to run
   @Override
   protected void interrupted() {
+    Robot.m_megapeg.stopMegaPeg();
   }
 }

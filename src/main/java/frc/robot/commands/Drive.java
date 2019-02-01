@@ -15,6 +15,7 @@ public class Drive extends Command {
 
 	public Drive(double leftSpeed, double rightSpeed) {
 		requires(Robot.m_drivetrain);
+		requires(Robot.m_megapeg);
 		leftSpeedLocal = leftSpeed;
 		rightSpeedLocal = rightSpeed;
 	}

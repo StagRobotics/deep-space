@@ -24,7 +24,7 @@ public class ToggleMegaPeg extends Command {
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    SmartDashboard.putNumber("Accelerometer Angle", Robot.m_megapeg.getY()*90);
+    
 
     if(Robot.m_megapeg.getMegaPegState() == "up"){
       Robot.m_megapeg.lowerMegaPeg();
@@ -38,12 +38,12 @@ public class ToggleMegaPeg extends Command {
   @Override
   protected boolean isFinished() {
     if (Robot.m_megapeg.getMegaPegState() == "down"){
-      if(Robot.m_megapeg.getY()*90*-1 >= 45){
+      if(Robot.m_megapeg.getAngle() >= 45){
         Robot.m_megapeg.toggleMegaPeg();
         return true;
       }
     } else if(Robot.m_megapeg.getMegaPegState() == "up"){
-      if(Robot.m_megapeg.getY()*90*-1 <= 0){
+      if(Robot.m_megapeg.getAngle() <= 0){
         Robot.m_megapeg.toggleMegaPeg();
         return true;
       }
@@ -54,6 +54,7 @@ public class ToggleMegaPeg extends Command {
   // Called once after isFinished returns true
   @Override
   protected void end() {
+    Robot.m_megapeg.stopMegaPeg();
   }
 
   // Called when another command which requires one or more of the same

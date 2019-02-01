@@ -15,10 +15,14 @@ import frc.robot.subsystems.GripPipeline;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
+import edu.wpi.first.wpilibj.buttons.POVButton;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.opencv.imgproc.Imgproc;
 import edu.wpi.cscore.*;
 import org.opencv.core.Mat;
+
+
+
 import org.opencv.core.*;
 import frc.robot.commands.*;
 
@@ -56,25 +60,19 @@ public class OI {
 
 	public OI() {
 
-		JoystickButton toggleMegaPeg = new JoystickButton(auxJoystick, 1);
-		JoystickButton scoringMegaPeg = new JoystickButton(auxJoystick, 2);
-		JoystickButton liftMegaPeg = new JoystickButton(auxJoystick, 3);
-		JoystickButton lowerMegaPeg = new JoystickButton(auxJoystick, 4);
+		JoystickButton rollSnowPlowIn = new JoystickButton(auxJoystick, 1);
 
-		JoystickButton lightToggle = new JoystickButton(leftJoystick, 1);
-
+		POVButton liftElevator = new POVButton(auxJoystick, 0);
+	
 		SmartDashboard.putData("AutoLineup", new autoLineup());
-		
+		SmartDashboard.putData("Reset Encoder", new resetElevatorEncoder());
 
-		toggleMegaPeg.whenPressed(new ToggleMegaPeg());
-		liftMegaPeg.whenPressed(new LiftMegaPeg());
-		scoringMegaPeg.whenPressed(new ScoringMegaPeg());
-		lowerMegaPeg.whenPressed(new lowerMegaPeg());
-		lightToggle.whenPressed(new light());
+		rollSnowPlowIn.whileHeld(new rollSnowPlowIn());
+		rollSnowPlowIn.whenReleased(new stopSnowPlowMotor());
 
+		liftElevator.whenPressed(new raiseElevatorHigh());
 
 		SmartDashboard.putString("Mega Peg State", Robot.m_megapeg.getMegaPegState());
-		
 
 		new Thread(() -> {
 			UsbCamera camera = CameraServer.getInstance().startAutomaticCapture();

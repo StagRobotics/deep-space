@@ -7,6 +7,8 @@
 
 package frc.robot;
 
+//Import packages needed to run
+
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
@@ -14,44 +16,27 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.GripPipeline;
-import edu.wpi.cscore.CvSource;
-import edu.wpi.cscore.UsbCamera;
-import edu.wpi.cscore.VideoMode.PixelFormat;
-import frc.robot.subsystems.GripPipeline;
-import edu.wpi.first.cameraserver.CameraServer;
-import edu.wpi.cscore.*;
-import org.opencv.core.Mat;
-import org.opencv.imgproc.Imgproc;
 import frc.robot.subsystems.MegaPeg;
+import frc.robot.subsystems.WheelyScoop;
 
-
-/**
- * The VM is configured to automatically run this class, and to call the
- * functions corresponding to each mode, as described in the TimedRobot
- * documentation. If you change the name of this class or the package after
- * creating this project, you must also update the build.gradle file in the
- * project.
- */
 public class Robot extends TimedRobot {
   
   public static MegaPeg m_megapeg;
   public static GripPipeline m_grippipeline;
   public static DriveTrain m_drivetrain;
+  public static WheelyScoop m_wheelyscoop;
   public static OI m_oi;
 
   Command m_autonomousCommand;
   SendableChooser<Command> m_chooser = new SendableChooser<>();
 
-  /**
-   * This function is run when the robot is first started up and should be
-   * used for any initialization code.
-   */
   @Override
   public void robotInit() {
 
     m_megapeg = new MegaPeg();
     m_grippipeline = new GripPipeline();
     m_drivetrain = new DriveTrain();
+    m_wheelyscoop = new WheelyScoop();
     m_oi =new OI();
     
     // chooser.addOption("My Auto", new MyAutoCommand());
@@ -97,7 +82,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousInit() {
-    m_autonomousCommand = m_chooser.getSelected();
+    //m_autonomousCommand = m_chooser.getSelected();
 
     /*
      * String autoSelected = SmartDashboard.getString("Auto Selector",
@@ -107,9 +92,9 @@ public class Robot extends TimedRobot {
      */
 
     // schedule the autonomous command (example)
-    if (m_autonomousCommand != null) {
-      m_autonomousCommand.start();
-    }
+    //if (m_autonomousCommand != null) {
+    //  m_autonomousCommand.start();
+    //}
   }
 
   /**

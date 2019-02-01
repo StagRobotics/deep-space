@@ -29,7 +29,7 @@ public class lowerMegaPeg extends Command {
   // Make this return true when this Command no longer needs to run execute()
   @Override
   protected boolean isFinished() {
-    if(Robot.m_megapeg.getY()*90*-1 <= 0){
+    if(Robot.m_megapeg.getAngle() <= 0){
       return true;
     }
     else{

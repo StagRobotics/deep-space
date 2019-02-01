@@ -10,8 +10,8 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj.command.Command;
 import frc.robot.Robot;
 
-public class scoringMegaPeg extends Command {
-  public scoringMegaPeg() {
+public class resetGyro extends Command {
+  public resetGyro() {
     requires(Robot.m_megapeg);
   }
 
@@ -23,32 +23,23 @@ public class scoringMegaPeg extends Command {
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    Robot.m_megapeg.scoringMegaPeg();
+    Robot.m_megapeg.resetGyro();
   }
 
   // Make this return true when this Command no longer needs to run execute()
   @Override
   protected boolean isFinished() {
-    if(Robot.m_megapeg.getMegaPegState() == "up" && Robot.m_megapeg.getAngle() <= 15){
-      return true;
-    } else if(Robot.m_megapeg.getMegaPegState() == "down" && Robot.m_megapeg.getAngle() >=15) {
-      return true;
-    } else{
-      return false;
-    }
+    return true;
   }
 
   // Called once after isFinished returns true
   @Override
   protected void end() {
-    Robot.m_megapeg.toggleMegaPeg();
-    Robot.m_megapeg.stopMegaPeg();
   }
 
   // Called when another command which requires one or more of the same
   // subsystems is scheduled to run
   @Override
   protected void interrupted() {
-    Robot.m_megapeg.stopMegaPeg();
   }
 }
