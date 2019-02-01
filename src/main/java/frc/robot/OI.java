@@ -62,7 +62,9 @@ public class OI {
 
 		JoystickButton rollSnowPlowIn = new JoystickButton(auxJoystick, 1);
 
-		POVButton liftElevator = new POVButton(auxJoystick, 0);
+		POVButton liftElevatorHigh = new POVButton(auxJoystick, 0);
+		POVButton liftElevatorLow = new POVButton(auxJoystick, 0);
+		JoystickButton lowerElevator = new JoystickButton(auxJoystick, 6);
 	
 		SmartDashboard.putData("AutoLineup", new autoLineup());
 		SmartDashboard.putData("Reset Encoder", new resetElevatorEncoder());
@@ -70,7 +72,9 @@ public class OI {
 		rollSnowPlowIn.whileHeld(new rollSnowPlowIn());
 		rollSnowPlowIn.whenReleased(new stopSnowPlowMotor());
 
-		liftElevator.whenPressed(new raiseElevatorHigh());
+		liftElevatorHigh.whenPressed(new raiseElevatorHigh());
+		liftElevatorLow.whenPressed(new raiseElevatorLow());
+		lowerElevator.whenPressed(new lowerElevator());
 
 		SmartDashboard.putString("Mega Peg State", Robot.m_megapeg.getMegaPegState());
 

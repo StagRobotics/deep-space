@@ -11,7 +11,6 @@ import frc.robot.Robot;
 import frc.robot.RobotMap;
 import frc.robot.commands.TankDriveWithJoystick;
 
-import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 import edu.wpi.first.wpilibj.Encoder;
