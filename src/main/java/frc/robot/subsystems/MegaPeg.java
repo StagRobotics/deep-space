@@ -11,6 +11,7 @@ import frc.robot.RobotMap;
 import edu.wpi.first.wpilibj.ADXL345_I2C;
 import edu.wpi.first.wpilibj.AnalogAccelerometer;
 import edu.wpi.first.wpilibj.AnalogGyro;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.command.Subsystem;
@@ -34,7 +35,7 @@ public class MegaPeg extends Subsystem {
   public SpeedController megaPegMotor = new Spark(RobotMap.megaPegMotor);
 
   private String megaPegState = "up";
-  
+
   @Override
   public void initDefaultCommand() {
     setDefaultCommand(new moveMegaPegWithJoystick());

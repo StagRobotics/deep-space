@@ -10,8 +10,8 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj.command.Command;
 import frc.robot.Robot;
 
-public class lowerElevator extends Command {
-  public lowerElevator() {
+public class raiseFrontElevatorHighLimitSwitch extends Command {
+  public raiseFrontElevatorHighLimitSwitch() {
     requires(Robot.m_wheelyscoop);
   }
 
@@ -23,23 +23,23 @@ public class lowerElevator extends Command {
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    Robot.m_wheelyscoop.lowerElevator();
+    Robot.m_wheelyscoop.liftFrontElevator();
   }
 
   // Make this return true when this Command no longer needs to run execute()
   @Override
   protected boolean isFinished() {
-    if(Robot.m_wheelyscoop.getEncoderRevolutions() <= 0){
-      return true;
-    } else {
+    if(Robot.m_wheelyscoop.checkFrontElevatorUp()){
       return false;
+    } else {
+      return true;
     }
   }
 
   // Called once after isFinished returns true
   @Override
   protected void end() {
-    Robot.m_wheelyscoop.stopElevator();
+    Robot.m_wheelyscoop.stopFrontElevator();
   }
 
   // Called when another command which requires one or more of the same

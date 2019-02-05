@@ -10,41 +10,48 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj.command.Command;
 import frc.robot.Robot;
 
-public class raiseElevatorHigh extends Command {
+public class raiseFrontElevatorLowLimitSwitch extends Command {
+  
+  String elevatorPosition;
 
-  // Height in Inches
-  double HEIGHT = 10;
-
-  public raiseElevatorHigh() {
+  public raiseFrontElevatorLowLimitSwitch() {
     requires(Robot.m_wheelyscoop);
   }
 
   // Called just before this Command runs the first time
   @Override
   protected void initialize() {
+    if(Robot.m_wheelyscoop.checkFrontElevatorBottom()){
+      elevatorPosition = "Up";
+    } else if (Robot.m_wheelyscoop.checkFrontElevatorUp()){
+      elevatorPosition = "Down";
+    }
   }
 
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    Robot.m_wheelyscoop.liftElevator();
+    if(elevatorPosition == "Up"){
+      Robot.m_wheelyscoop.lowerFrontElevator();
+    } else if(elevatorPosition == "Down"){
+      Robot.m_wheelyscoop.liftFrontElevator();
+    }
   }
 
   // Make this return true when this Command no longer needs to run execute()
   @Override
   protected boolean isFinished() {
-    // Checks if the Encoder Count is greater than the Height times 8. (The Lead screw rotates 8 times per inch)
-    if(Robot.m_wheelyscoop.getEncoderRevolutions() >= HEIGHT*8){
-      return true;
-    }else{
+    if(Robot.m_wheelyscoop.checkFrontElevatorLow()){
       return false;
+    } else {
+      return true;
     }
   }
 
   // Called once after isFinished returns true
   @Override
   protected void end() {
-    Robot.m_wheelyscoop.stopElevator();
+    Robot.m_wheelyscoop.stopFrontElevator();
   }
 
   // Called when another command which requires one or more of the same

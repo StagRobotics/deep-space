@@ -21,13 +21,15 @@ public class RobotMap {
   public static int leftMotor = 0;
   public static int rightMotor = 1;
   public static int megaPegMotor = 2;
-  public static int elevatorMotor = 3;
+  public static int frontElevatorMotor = 3;
   public static int snowPlowMotor = 4;
 
   // Digital
-  public static int elevatorEncoderPortOne = 0;
-  public static int elevatorEncoderPortTwo = 1;
-
+  public static int frontElevatorEncoderPortOne = 0;
+  public static int frontElevatorEncoderPortTwo = 1;
+  public static int frontElevatorTopLimitSwitch = 2;
+  public static int frontElevatorLowLimitSwitch = 3;
+  public static int frontElevatorBottomLimitSwitch = 4;
   // Analog Ports
   public static int analogGyro = 0;
   // If you are using multiple modules, make sure to define both the port
