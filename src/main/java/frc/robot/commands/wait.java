@@ -7,32 +7,35 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.Command;
-import frc.robot.Robot;
 
-public class lowerMegaPeg extends Command {
-  public lowerMegaPeg() {
-    requires(Robot.m_megapeg);
+public class wait extends Command {
+  Timer timer = new Timer();
+  double timeLimit = 0.0;
+  public wait(double time) {
+    timeLimit = time;
   }
 
   // Called just before this Command runs the first time
   @Override
   protected void initialize() {
+    timer.reset();
+    timer.start();
   }
 
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    Robot.m_megapeg.lowerMegaPeg();
+    
   }
 
   // Make this return true when this Command no longer needs to run execute()
   @Override
   protected boolean isFinished() {
-    if(Robot.m_megapeg.getAngle() <= 0){
+    if(timer.get() >= timeLimit){
       return true;
-    }
-    else{
+    } else {
       return false;
     }
   }
@@ -40,7 +43,6 @@ public class lowerMegaPeg extends Command {
   // Called once after isFinished returns true
   @Override
   protected void end() {
-    Robot.m_megapeg.stopMegaPeg();
   }
 
   // Called when another command which requires one or more of the same

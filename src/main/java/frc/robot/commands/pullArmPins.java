@@ -8,15 +8,11 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.command.Command;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Robot;
 
-public class moveMegaPegWithJoystick extends Command {
-
-  double localSpeed = 0;
-
-  public moveMegaPegWithJoystick() {
-    requires(Robot.m_megapeg);
+public class pullArmPins extends Command {
+  public pullArmPins() {
+    requires(Robot.m_backclimber);
   }
 
   // Called just before this Command runs the first time
@@ -27,25 +23,23 @@ public class moveMegaPegWithJoystick extends Command {
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    Robot.m_megapeg.moveMegaPegWithJoystick(Robot.m_oi.getAuxJoystick().getY()*-1);
+    Robot.m_backclimber.pullArmPins();
   }
 
   // Make this return true when this Command no longer needs to run execute()
   @Override
   protected boolean isFinished() {
-    return false;
+    return true;
   }
 
   // Called once after isFinished returns true
   @Override
   protected void end() {
-    Robot.m_megapeg.moveMegaPegWithJoystick(0.0);
   }
 
   // Called when another command which requires one or more of the same
   // subsystems is scheduled to run
   @Override
   protected void interrupted() {
-
   }
 }

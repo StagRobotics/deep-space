@@ -1,18 +1,16 @@
-/*----------------------------------------------------------------------------*/
-/* Copyright (c) 2018 FIRST. All Rights Reserved.                             */
-/* Open Source Software - may be modified and shared by FRC teams. The code   */
-/* must be accompanied by the FIRST BSD license file in the root directory of */
-/* the project.                                                               */
-/*----------------------------------------------------------------------------*/
-
 package frc.robot.commands;
 
+// Import packages needed to run
 import edu.wpi.first.wpilibj.command.Command;
 import frc.robot.Robot;
 
-public class InverseDrive extends Command {
-  public InverseDrive() {
-    requires(Robot.m_drivetrain);
+public class lowerBackElevator extends Command {
+
+  // Initialize lowerBackElevator command
+  public lowerBackElevator() {
+
+    // These are subsystems this command requires
+    requires(Robot.m_backclimber);
   }
 
   // Called just before this Command runs the first time
@@ -23,18 +21,29 @@ public class InverseDrive extends Command {
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    Robot.m_drivetrain.inverseDrive();
+
+    // Lowers the back elevator
+    Robot.m_backclimber.lowerBackElevator();
   }
 
   // Make this return true when this Command no longer needs to run execute()
   @Override
   protected boolean isFinished() {
-    return true;
+
+    // The front elevator limit switch returns true until pressed this allows to stop the motor when the elevator hits the limit switch
+    if(Robot.m_backclimber.checkBackElevatorBottom()){
+      return false;
+    } else {
+      return true;
+    }
   }
 
   // Called once after isFinished returns true
   @Override
   protected void end() {
+
+    // Turn off the back elevator motor
+    Robot.m_backclimber.stopBackElevator();
   }
 
   // Called when another command which requires one or more of the same

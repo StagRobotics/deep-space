@@ -79,8 +79,6 @@ public class OI {
 		liftElevatorLow.whenPressed(new raiseFrontElevatorLowLimitSwitch());
 		lowerElevator.whenPressed(new lowerFrontElevatorLimitSwitch());
 
-		SmartDashboard.putString("Mega Peg State", Robot.m_megapeg.getMegaPegState());
-
 		new Thread(() -> {
 			UsbCamera camera = CameraServer.getInstance().startAutomaticCapture();
 			camera.setResolution(640, 480);

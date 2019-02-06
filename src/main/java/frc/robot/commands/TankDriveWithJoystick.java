@@ -4,9 +4,9 @@ import frc.robot.Robot;
 
 import edu.wpi.first.wpilibj.command.Command;
 
-public class TankDriveWithJoystick extends Command {
+public class tankDriveWithJoystick extends Command {
 
-	public TankDriveWithJoystick() {
+	public tankDriveWithJoystick() {
 		requires(Robot.m_drivetrain);
 	}
 

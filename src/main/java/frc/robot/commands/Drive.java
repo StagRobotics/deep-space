@@ -1,32 +1,34 @@
 package frc.robot.commands;
 
+// Import packages needed to run
 import frc.robot.Robot;
-
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.Command;
 
-/**
- *
- */
-public class Drive extends Command {
+public class drive extends Command {
 
+	// Initialize local speed variables
 	double leftSpeedLocal = 0;
 	double rightSpeedLocal = 0;
 
-	public Drive(double leftSpeed, double rightSpeed) {
+	// Initialize drive command that requires a left and right speed
+	public drive(double leftSpeed, double rightSpeed) {
+		
+		// These are subsystems this command requires
 		requires(Robot.m_drivetrain);
-		requires(Robot.m_megapeg);
+
+		// Sets the local speeds to the speeds passed in from calling the command
 		leftSpeedLocal = leftSpeed;
 		rightSpeedLocal = rightSpeed;
 	}
 
 	// Called just before this Command runs the first time
 	protected void initialize() {
-		
 	}
 
 	// Called repeatedly when this Command is scheduled to run
 	protected void execute() {
+		
+		// Sets the motors to the local speed
 		Robot.m_drivetrain.leftMotor.set(leftSpeedLocal);
 		Robot.m_drivetrain.rightMotor.set(-rightSpeedLocal);
 	}

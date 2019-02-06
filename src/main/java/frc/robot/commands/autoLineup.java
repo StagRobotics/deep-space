@@ -1,15 +1,8 @@
-/*----------------------------------------------------------------------------*/
-/* Copyright (c) 2018 FIRST. All Rights Reserved.                             */
-/* Open Source Software - may be modified and shared by FRC teams. The code   */
-/* must be accompanied by the FIRST BSD license file in the root directory of */
-/* the project.                                                               */
-/*----------------------------------------------------------------------------*/
-
 package frc.robot.commands;
 
+// Import packages needed to run
 import edu.wpi.first.wpilibj.command.Command;
 import frc.robot.Robot;
-import org.opencv.core.Mat;
 import org.opencv.core.*;
 import org.opencv.imgproc.Imgproc;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -21,6 +14,7 @@ public class autoLineup extends Command {
     
   }
 
+	// Initialize variables used for calculations
   Rect left;
 	Rect right;
 	int leftHeight = 0;
@@ -40,19 +34,24 @@ public class autoLineup extends Command {
   int midPoint = 320;
   int finalTargetCenterX = 0;
 
-  Timer timer = new Timer();
-  // Called just before this Command runs the first time
-  @Override
+	// Initialize Timers
+	Timer timer = new Timer();
+	
+	@Override
+	// Called once at the beginning of the command
   protected void initialize() {
+		// Starts the timer
     timer.start();
-
   }
 
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
+
+		// Counts the number of contours the robot sees
     int numberOfContours = Robot.m_oi.gripPipeline.filterContoursOutput().size();
 				int count = 0;
+				// If there are no contours then set all values to zero
 				if(numberOfContours == 0){
 					leftHeight = 0;
 					leftWidth = 0;
@@ -69,10 +68,12 @@ public class autoLineup extends Command {
 					rightCenterX = 0;
 					rightCenterY = 0;
 				}else{
+					// If there are countours than drop into this for loop that iterates through each contour
 					for(MatOfPoint countour : Robot.m_oi.gripPipeline.filterContoursOutput()){
 						Point[] countourArray = countour.toArray();
 						Rect target = Imgproc.boundingRect(countour);
 						count++;
+						// Pulls information about the countour that is being iterated
 						int targetHeight = target.height;
 						int targetWidth = target.width;
 						int targetX = target.x;
@@ -80,7 +81,7 @@ public class autoLineup extends Command {
 						int targetArea = targetHeight*targetWidth;
 						int targetCenterX = (targetX + (targetX +targetWidth))/2;
 						int targetCenterY = (targetY + (targetY + targetHeight))/2;
-
+						// Take the first countour and assign it to the right target
 						if(count == 1){
 							rightHeight = targetHeight;
 							rightWidth = targetWidth;
@@ -90,6 +91,7 @@ public class autoLineup extends Command {
 							rightCenterX = targetCenterX;
 							rightCenterY = targetCenterY;
 						}
+						// Take the second countour and assign it to the left target
 						else if(count==2){
 							leftHeight = targetHeight;
 							leftWidth = targetWidth;
@@ -102,21 +104,21 @@ public class autoLineup extends Command {
 						else break;
 					}
 				}
-        
+        // Calculates where the center of the target is
         finalTargetCenterX = (leftCenterX + rightCenterX)/2;
-        SmartDashboard.putNumber("Final Target Center X", finalTargetCenterX);
+				
+				// This is the Logic that is used to move the robot based on the target's position
         if(finalTargetCenterX < 220){
-          new Drive(0.3,0.4).execute();
+          new drive(0.3,0.4).execute();
           SmartDashboard.putString("AutoLine Up", "Too far right");
         } else if(finalTargetCenterX > 260){
-          new Drive(0.4,0.3).execute();
+          new drive(0.4,0.3).execute();
           SmartDashboard.putString("AutoLine Up", "Too far left");
         } else {
-          new Drive(0.3,0.3).execute();
+          new drive(0.3,0.3).execute();
           SmartDashboard.putString("AutoLine Up", "Just Right");
         }
-
-
+				/*SmartDashboard.putNumber("Final Target Center X", finalTargetCenterX);
 				SmartDashboard.putNumber("Left Height", leftHeight);
 				SmartDashboard.putNumber("Left Width", leftWidth);
 				SmartDashboard.putNumber("Left X", leftX);
@@ -130,15 +132,13 @@ public class autoLineup extends Command {
 				SmartDashboard.putNumber("Right Y", rightY);
 				SmartDashboard.putNumber("Right Area", rightArea);
 				SmartDashboard.putNumber("Right Center X", rightCenterX);
-        SmartDashboard.putNumber("Right Center Y", rightCenterY);
-        
-    
-
+        SmartDashboard.putNumber("Right Center Y", rightCenterY);*/
   }
 
   // Make this return true when this Command no longer needs to run execute()
   @Override
   protected boolean isFinished() {
+		// Runs the command for 1 second and then stops
     if(timer.get()>1){
       return true;
     }
@@ -148,7 +148,7 @@ public class autoLineup extends Command {
   // Called once after isFinished returns true
   @Override
   protected void end() {
-    new Drive(0.0,0.0).execute();
+    new drive(0.0,0.0);
   }
 
   // Called when another command which requires one or more of the same
