@@ -1,8 +1,11 @@
 package frc.robot;
 
+import javax.swing.text.StyleContext.SmallAttributeSet;
+
 // Import packages needed to run
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Scheduler;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.GripPipeline;
 import frc.robot.subsystems.MegaPeg;
@@ -59,6 +62,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopPeriodic() {
+    SmartDashboard.putData("Command", Scheduler.getInstance());
     Scheduler.getInstance().run();
   }
 

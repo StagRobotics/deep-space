@@ -13,6 +13,7 @@ import frc.robot.Robot;
 public class setElevatorEncoderValues extends Command {
   public setElevatorEncoderValues() {
     requires(Robot.m_wheelyscoop);
+    requires(Robot.m_backclimber);
   }
 
   // Called just before this Command runs the first time

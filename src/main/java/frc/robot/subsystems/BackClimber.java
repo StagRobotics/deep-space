@@ -35,7 +35,7 @@ public class BackClimber extends Subsystem {
   @Override
   public void initDefaultCommand() {
     // Sets the Default Command to set the Encoder Values
-    setDefaultCommand(new setElevatorEncoderValues());
+    //setDefaultCommand(new setElevatorEncoderValues());
   }
 
   // Pulls the pins out of the Fork Arms to allow them to fall

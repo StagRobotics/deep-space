@@ -4,6 +4,7 @@ package frc.robot.subsystems;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import frc.robot.RobotMap;
 import frc.robot.commands.setElevatorEncoderValues;
+import frc.robot.commands.rollSnowPlowIn;
 import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Spark;
@@ -32,7 +33,7 @@ public class WheelyScoop extends Subsystem {
   @Override
   public void initDefaultCommand() {
     // Sets the Default Command to set the Encoder Values
-    setDefaultCommand(new setElevatorEncoderValues());
+    // setDefaultCommand(new setElevatorEncoderValues());
   }
 
   // Resets the encoder, that is on the front elevator's leadscrew, to zero

@@ -68,6 +68,7 @@ public class OI {
 	
 		SmartDashboard.putData("AutoLineup", new autoLineup());
 		SmartDashboard.putData("Reset Encoder", new resetElevatorEncoder());
+		SmartDashboard.putData("Roll", new rollSnowPlowIn());
 
 		rollSnowPlowIn.whileHeld(new rollSnowPlowIn());
 		rollSnowPlowIn.whenReleased(new stopSnowPlowMotor());
