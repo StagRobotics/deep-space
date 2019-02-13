@@ -27,7 +27,7 @@ public class BackClimber extends Subsystem {
   public Encoder backElevatorDriveEncoder = new Encoder(RobotMap.backElevatorDriveEncoderPortOne, RobotMap.backElevatorDriveEncoderPortTwo, false, Encoder.EncodingType.k4X);
 
   // Initialize Static Variables 
-  double MOTORSPEED = 0.7;
+  double MOTORSPEED = 1.0;
   double WHEELDIAMETER = 2.0;
   double WHEELRADIUS = WHEELDIAMETER/2;
   double REVOLUTIONSTODISTANCE = 3.14 * (WHEELRADIUS*WHEELRADIUS);
@@ -81,6 +81,10 @@ public class BackClimber extends Subsystem {
   // Drives the deployable wheels at a given speed
   public void backElevatorDrive(double speed){
     backElevatorDriveMotor.set(speed);
+  }
+
+  public void stopBackElevatorDrive(){
+    backElevatorDriveMotor.set(0.0);
   }
 
   // Converts the encoder count, that is on the back elevator's deployable wheels, to revolutions

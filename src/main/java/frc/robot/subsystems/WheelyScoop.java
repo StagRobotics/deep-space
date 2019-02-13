@@ -3,18 +3,16 @@ package frc.robot.subsystems;
 // Import packages needed to run
 import edu.wpi.first.wpilibj.command.Subsystem;
 import frc.robot.RobotMap;
-import frc.robot.commands.setElevatorEncoderValues;
-import frc.robot.commands.rollSnowPlowIn;
 import edu.wpi.first.wpilibj.SpeedController;
+import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.Encoder;
-import edu.wpi.first.wpilibj.Spark;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Relay;;
 
 public class WheelyScoop extends Subsystem {
  
   // Initialize Motor Controllers
-  public SpeedController frontElevatorMotor = new Spark(RobotMap.frontElevatorMotor);
+  public SpeedController frontElevatorMotor = new Talon(RobotMap.frontElevatorMotor);
 
   // Initialize Spikes
   public Relay snowPlowMotor = new Relay(RobotMap.snowPlowMotor);
@@ -28,7 +26,7 @@ public class WheelyScoop extends Subsystem {
   DigitalInput frontElevatorBottomLimitSwitch = new DigitalInput(RobotMap.frontElevatorBottomLimitSwitch);
 
   // Initialize Static Variables
-  double MOTORSPEED = 0.7;
+  double MOTORSPEED = 1.0;
 
   @Override
   public void initDefaultCommand() {
@@ -36,7 +34,7 @@ public class WheelyScoop extends Subsystem {
     // setDefaultCommand(new setElevatorEncoderValues());
   }
 
-  // Resets the encoder, that is on the front elevator's leadscrew, to zero
+  // Resets the encoder that is on the front elevator's leadscrew to zero
   public void resetEncoder() {
     elevatorEncoder.reset();
   }

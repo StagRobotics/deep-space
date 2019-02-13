@@ -11,7 +11,6 @@ import edu.wpi.first.wpilibj.Timer;
 public class autoLineup extends Command {
   public autoLineup() {
     requires(Robot.m_drivetrain);
-    
   }
 
 	// Initialize variables used for calculations

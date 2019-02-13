@@ -37,6 +37,13 @@ public class OI {
 
 	public double speed = 0.25;
 
+	UsbCamera megaPegCamera = CameraServer.getInstance().startAutomaticCapture(0);
+		
+	UsbCamera frontElevatorCamera = CameraServer.getInstance().startAutomaticCapture(1);
+	
+	VideoSink server = CameraServer.getInstance().getServer();
+
+	public String cameraState = "megaPeg";
 	Rect left;
 	Rect right;
 	int leftHeight = 0;
@@ -60,12 +67,23 @@ public class OI {
 
 	public OI() {
 
-		JoystickButton rollSnowPlowIn = new JoystickButton(auxJoystick, 1);
+		megaPegCamera.setResolution(640, 480);
+		frontElevatorCamera.setResolution(640, 480);
 
-		POVButton liftElevatorHigh = new POVButton(auxJoystick, 0);
-		POVButton liftElevatorLow = new POVButton(auxJoystick, 180);
-		JoystickButton lowerElevator = new JoystickButton(auxJoystick, 6);
+		JoystickButton rollSnowPlowIn = new JoystickButton(auxJoystick, 1);
+		
+		JoystickButton liftFrontElevatorHigh = new JoystickButton(auxJoystick, 5);
+		//POVButton liftElevatorLow = new POVButton(auxJoystick, 180);
+		JoystickButton lowerFrontElevator = new JoystickButton(auxJoystick, 6);
+		JoystickButton liftBackElevator = new JoystickButton(auxJoystick, 3);
+		JoystickButton lowerBackElevator = new JoystickButton(auxJoystick, 4);
+		JoystickButton driveBackElevator = new JoystickButton(auxJoystick, 2);
+		JoystickButton stopAllMotors = new JoystickButton(auxJoystick, 12);
+
+		//JoystickButton releaseArms = new JoystickButton(auxJoystick, 5);
 	
+		stopAllMotors.whenPressed(new stopAllMotors());
+
 		SmartDashboard.putData("AutoLineup", new autoLineup());
 		SmartDashboard.putData("Reset Encoder", new resetElevatorEncoder());
 		SmartDashboard.putData("Roll", new rollSnowPlowIn());
@@ -73,16 +91,24 @@ public class OI {
 		rollSnowPlowIn.whileHeld(new rollSnowPlowIn());
 		rollSnowPlowIn.whenReleased(new stopSnowPlowMotor());
 
-		//liftElevatorHigh.whenPressed(new raiseFrontElevatorHigh());
-		//liftElevatorLow.whenPressed(new raiseFrontElevatorLow());
-		//lowerElevator.whenPressed(new lowerFrontElevator());
-		liftElevatorHigh.whenPressed(new raiseFrontElevatorHighLimitSwitch());
-		liftElevatorLow.whenPressed(new raiseFrontElevatorLowLimitSwitch());
-		lowerElevator.whenPressed(new lowerFrontElevatorLimitSwitch());
+		liftFrontElevatorHigh.whileHeld(new raiseFrontElevatorHighLimitSwitch());
+		liftFrontElevatorHigh.whenReleased(new stopFrontElevator());
+		lowerFrontElevator.whileHeld(new lowerFrontElevatorLimitSwitch());
+		lowerFrontElevator.whenReleased(new stopFrontElevator());
+		liftBackElevator.whileHeld(new raiseBackElevator());
+		liftBackElevator.whenReleased(new stopBackElevator());
+		lowerBackElevator.whileHeld(new lowerBackElevator());
+		lowerBackElevator.whenReleased(new stopBackElevator());
+		driveBackElevator.whileHeld(new driveBackElevator(1.0, 5));
+		driveBackElevator.whenReleased(new stopDriveBackElevator());
 
 		new Thread(() -> {
-			UsbCamera camera = CameraServer.getInstance().startAutomaticCapture();
-			camera.setResolution(640, 480);
+
+			if(cameraState == "megaPeg"){
+				server.setSource(megaPegCamera);
+			} else if(cameraState == "frontElevator"){
+				server.setSource(frontElevatorCamera);
+			}
 			
 			CvSink cvSink = CameraServer.getInstance().getVideo();
 			CvSource outputStream = CameraServer.getInstance().putVideo("Processed Vision Camera", 640, 480);
@@ -97,77 +123,9 @@ public class OI {
 				gripPipeline.process(source);
 				output = gripPipeline.cvDilateOutput();
 				outputStream.putFrame(output);
-				/*int numberOfContours = gripPipeline.filterContoursOutput().size();
-				int count = 0;
-				if(numberOfContours == 0){
-					leftHeight = 0;
-					leftWidth = 0;
-					leftX = 0;
-					leftY = 0;
-					leftArea = 0;
-					leftCenterX = 0;
-					leftCenterY = 0;
-					rightHeight = 0;
-					rightWidth = 0;
-					rightX = 0;
-					rightY = 0;
-					rightArea = 0;
-					rightCenterX = 0;
-					rightCenterY = 0;
-				}else{
-					for(MatOfPoint countour : gripPipeline.filterContoursOutput()){
-						Point[] countourArray = countour.toArray();
-						Rect target = Imgproc.boundingRect(countour);
-						count++;
-						int targetHeight = target.height;
-						int targetWidth = target.width;
-						int targetX = target.x;
-						int targetY = target.y;
-						int targetArea = targetHeight*targetWidth;
-						int targetCenterX = (targetX + (targetX +targetWidth))/2;
-						int targetCenterY = (targetY + (targetY + targetHeight))/2;
-
-						if(count == 1){
-							rightHeight = targetHeight;
-							rightWidth = targetWidth;
-							rightX = targetX;
-							rightY = targetY;
-							rightArea = targetArea;
-							rightCenterX = targetCenterX;
-							rightCenterY = targetCenterY;
-						}
-						else if(count==2){
-							leftHeight = targetHeight;
-							leftWidth = targetWidth;
-							leftX = targetX;
-							leftY = targetY;
-							leftArea = targetArea;
-							leftCenterX = targetCenterX;
-							leftCenterY = targetCenterY;
-						}
-						else break;
-					}
-				}*/
-				
-				/*SmartDashboard.putNumber("Left Height", leftHeight);
-				SmartDashboard.putNumber("Left Width", leftWidth);
-				SmartDashboard.putNumber("Left X", leftX);
-				SmartDashboard.putNumber("Left Y", leftY);
-				SmartDashboard.putNumber("Left Area", leftArea);
-				SmartDashboard.putNumber("Left Center X", leftCenterX);
-				SmartDashboard.putNumber("Left Center Y", leftCenterY);
-				SmartDashboard.putNumber("Right Height", rightHeight);
-				SmartDashboard.putNumber("Right Width", rightWidth);
-				SmartDashboard.putNumber("Right X", rightX);
-				SmartDashboard.putNumber("Right Y", rightY);
-				SmartDashboard.putNumber("Right Area", rightArea);
-				SmartDashboard.putNumber("Right Center X", rightCenterX);
-				SmartDashboard.putNumber("Right Center Y", rightCenterY);
-				*/
 				SmartDashboard.putNumber("Size of Mat Array Points", gripPipeline.filterContoursOutput().size());
 			}
 		}).start();
-		
 	}
 
 	public Joystick getLeftJoystick() {

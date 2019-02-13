@@ -4,6 +4,7 @@ package frc.robot.subsystems;
 import frc.robot.Robot;
 import frc.robot.RobotMap;
 import frc.robot.commands.tankDriveWithJoystick;
+import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.PWMVictorSPX;
 import edu.wpi.first.wpilibj.Relay;
 import edu.wpi.first.wpilibj.command.Subsystem;
@@ -13,7 +14,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class DriveTrain extends Subsystem {
 
 	// Initialize Static Variables
-	public double DEADBAND = 0.20;
+	public double DEADBAND = 0.05;
 
 	// Initialize Motor Controllers
 	public PWMVictorSPX leftMotor = new PWMVictorSPX(RobotMap.leftMotor);
@@ -49,6 +50,8 @@ public class DriveTrain extends Subsystem {
 	// Passes speeds for the motors to the tankDrive part of DifferentialDrive
 	public void drive(double leftY, double rightY) {
 
+		boolean isLeftNegative = false;
+		boolean isRightNegative = false;
 		// Prevents motor movement if the input is between the DEADBAND and the negative of the DEADBAND
 		if (rightY < DEADBAND && rightY > -DEADBAND) {
 			rightY = 0.0;
@@ -58,6 +61,28 @@ public class DriveTrain extends Subsystem {
 		if (leftY < DEADBAND && leftY > -DEADBAND) {
 			leftY = 0.0;
 		}
+
+		if(leftY < 0.0){
+			isLeftNegative = true;
+		}
+		
+		if(rightY < 0.0){
+			isRightNegative = true;
+		}
+
+		leftY = leftY * leftY;
+		rightY = rightY * rightY;
+
+		if(isLeftNegative){
+			leftY = leftY * -1.0;
+		}
+		
+		if(isRightNegative){
+			rightY = rightY * -1.0;
+		}
+
+		SmartDashboard.putNumber("LeftY", leftY);
+		SmartDashboard.putNumber("RightY", rightY);
 
 		// Drives the robot in a tank drive style
 		robotDrive.tankDrive(leftY, rightY);
@@ -89,6 +114,14 @@ public class DriveTrain extends Subsystem {
 		else if(lightState == "on"){
 			lightState = "off";
 			light.set(Relay.Value.kOff);
+		}
+	}
+
+	public void toggleCamera(){
+		if(Robot.m_oi.cameraState == "megaPeg"){
+			Robot.m_oi.cameraState = "frontElevator";
+		} else if(Robot.m_oi.cameraState == "frontElevator"){
+			Robot.m_oi.cameraState = "megaPeg";
 		}
 	}
 }
