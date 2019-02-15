@@ -73,11 +73,14 @@ public class OI {
 		JoystickButton rollSnowPlowIn = new JoystickButton(auxJoystick, 1);
 		
 		JoystickButton liftFrontElevatorHigh = new JoystickButton(auxJoystick, 5);
-		//POVButton liftElevatorLow = new POVButton(auxJoystick, 180);
 		JoystickButton lowerFrontElevator = new JoystickButton(auxJoystick, 6);
 		JoystickButton liftBackElevator = new JoystickButton(auxJoystick, 3);
 		JoystickButton lowerBackElevator = new JoystickButton(auxJoystick, 4);
 		JoystickButton driveBackElevator = new JoystickButton(auxJoystick, 2);
+		JoystickButton manuallyLiftFrontElevator = new JoystickButton(auxJoystick, 7);
+		JoystickButton manuallyLowerFrontElevator = new JoystickButton(auxJoystick, 8);
+		JoystickButton manuallyLiftBackElevator = new JoystickButton(auxJoystick, 9);
+		JoystickButton manuallyLowerBackElevator = new JoystickButton(auxJoystick, 10);
 		JoystickButton stopAllMotors = new JoystickButton(auxJoystick, 12);
 
 		//JoystickButton releaseArms = new JoystickButton(auxJoystick, 5);
@@ -91,14 +94,18 @@ public class OI {
 		rollSnowPlowIn.whileHeld(new rollSnowPlowIn());
 		rollSnowPlowIn.whenReleased(new stopSnowPlowMotor());
 
-		liftFrontElevatorHigh.whileHeld(new raiseFrontElevatorHighLimitSwitch());
-		liftFrontElevatorHigh.whenReleased(new stopFrontElevator());
-		lowerFrontElevator.whileHeld(new lowerFrontElevatorLimitSwitch());
-		lowerFrontElevator.whenReleased(new stopFrontElevator());
-		liftBackElevator.whileHeld(new raiseBackElevator());
-		liftBackElevator.whenReleased(new stopBackElevator());
-		lowerBackElevator.whileHeld(new lowerBackElevator());
-		lowerBackElevator.whenReleased(new stopBackElevator());
+		liftFrontElevatorHigh.whenPressed(new raiseFrontElevatorHighLimitSwitch());
+		manuallyLiftFrontElevator.whileHeld(new raiseFrontElevatorHighLimitSwitch());
+		manuallyLiftFrontElevatorHigh.whenReleased(new stopFrontElevator());
+		lowerFrontElevator.whenPressed(new lowerFrontElevatorLimitSwitch());
+		manuallyLowerFrontElevator.whileHeld(new lowerFrontELevatorLimitSwitch());
+		manuallyLowerFrontElevator.whenReleased(new stopFrontElevator());
+		liftBackElevator.whenPressed(new raiseBackElevator());
+		manuallyLiftBackElevator.whileHeld(new raiseBackElevator());
+		manuallyLiftBackElevator.whenReleased(new stopBackElevator());
+		lowerBackElevator.whenPressed(new lowerBackElevator());
+		manuallyLowerBackElevator.whileHeld(new lowerBackElevator());
+		manuallyLowerBackElevator.whenReleased(new stopBackElevator());
 		driveBackElevator.whileHeld(new driveBackElevator(1.0, 5));
 		driveBackElevator.whenReleased(new stopDriveBackElevator());
 
