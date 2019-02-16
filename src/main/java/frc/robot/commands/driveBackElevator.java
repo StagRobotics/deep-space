@@ -24,15 +24,11 @@ public class driveBackElevator extends Command {
   // Called just before this Command runs the first time
   @Override
   protected void initialize() {
-    
-    // Reset the encoder right before using it
-    Robot.m_backclimber.resetEncoder();
   }
 
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-
     // Set the backElevatorDrive to the local speed
     Robot.m_backclimber.backElevatorDrive(localDriveSpeed);
   }
@@ -40,9 +36,7 @@ public class driveBackElevator extends Command {
   // Make this return true when this Command no longer needs to run execute()
   @Override
   protected boolean isFinished() {
-
-    // If the robot has travelled the distance that was passed then return true
-    if(Robot.m_backclimber.getEncoderDistance() >= localDistance){
+    if(Robot.m_backclimber.getDistanceFromPlatform() <= localDistance){
       return true;
     } else {
       return false;
@@ -52,7 +46,6 @@ public class driveBackElevator extends Command {
   // Called once after isFinished returns true
   @Override
   protected void end() {
-    
     // Stop the backElevatorDrive motor
     Robot.m_backclimber.backElevatorDrive(0.0);
   }

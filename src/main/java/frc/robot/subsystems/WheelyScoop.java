@@ -21,12 +21,13 @@ public class WheelyScoop extends Subsystem {
   public Encoder elevatorEncoder = new Encoder(RobotMap.frontElevatorEncoderPortOne, RobotMap.frontElevatorEncoderPortTwo, false, Encoder.EncodingType.k4X);
   
   // Initialize Limit Switches
-  DigitalInput frontElevatorTopLimitSwitch = new DigitalInput(RobotMap.frontElevatorTopLimitSwitch);
-  DigitalInput frontElevatorLowLimitSwitch = new DigitalInput(RobotMap.frontElevatorLowLimitSwitch);
-  DigitalInput frontElevatorBottomLimitSwitch = new DigitalInput(RobotMap.frontElevatorBottomLimitSwitch);
+  public DigitalInput frontElevatorTopLimitSwitch = new DigitalInput(RobotMap.frontElevatorTopLimitSwitch);
+  public DigitalInput frontElevatorLowLimitSwitch = new DigitalInput(RobotMap.frontElevatorLowLimitSwitch);
+  public DigitalInput frontElevatorBottomLimitSwitch = new DigitalInput(RobotMap.frontElevatorBottomLimitSwitch);
 
   // Initialize Static Variables
   double MOTORSPEED = 1.0;
+  double MOTORSPEEDUP = 0.75;
 
   @Override
   public void initDefaultCommand() {
@@ -46,7 +47,7 @@ public class WheelyScoop extends Subsystem {
 
   // Lifts the front elevator based on the MOTORSPEED variable
   public void liftFrontElevator(){
-    frontElevatorMotor.set(MOTORSPEED);
+    frontElevatorMotor.set(MOTORSPEEDUP);
   }
 
   // Lowers the front elevator based on the MOTORSPEED variable

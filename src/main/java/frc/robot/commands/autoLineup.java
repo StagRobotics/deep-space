@@ -9,6 +9,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.Timer;
 
 public class autoLineup extends Command {
+
+	// These are the subsystems that the Command uses
   public autoLineup() {
     requires(Robot.m_drivetrain);
   }

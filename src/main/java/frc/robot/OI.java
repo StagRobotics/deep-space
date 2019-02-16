@@ -1,48 +1,36 @@
-/*----------------------------------------------------------------------------*/
-/* Copyright (c) 2017-2018 FIRST. All Rights Reserved.                        */
-/* Open Source Software - may be modified and shared by FRC teams. The code   */
-/* must be accompanied by the FIRST BSD license file in the root directory of */
-/* the project.                                                               */
-/*----------------------------------------------------------------------------*/
-
 package frc.robot;
 
+// Import packages needed to run
 import org.opencv.core.Rect;
-
 import edu.wpi.cscore.CvSource;
 import edu.wpi.cscore.UsbCamera;
 import frc.robot.subsystems.GripPipeline;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
-import edu.wpi.first.wpilibj.buttons.POVButton;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import org.opencv.imgproc.Imgproc;
 import edu.wpi.cscore.*;
 import org.opencv.core.Mat;
-
-
-
-import org.opencv.core.*;
 import frc.robot.commands.*;
-
 
 public class OI {
 
+	// Initialize GripPipeline for vision code
 	public GripPipeline gripPipeline = new GripPipeline();
 
+	// Initialize Joysticks
 	private Joystick leftJoystick = new Joystick(0);
 	private Joystick rightJoystick = new Joystick(1);
 	private Joystick auxJoystick = new Joystick(2);
 
-	public double speed = 0.25;
-
-	UsbCamera megaPegCamera = CameraServer.getInstance().startAutomaticCapture(0);
-		
-	UsbCamera frontElevatorCamera = CameraServer.getInstance().startAutomaticCapture(1);
+	// Initialize Cameras
+	UsbCamera megaPegCamera = CameraServer.getInstance().startAutomaticCapture(RobotMap.megaPegCameraPort);
+	UsbCamera frontElevatorCamera = CameraServer.getInstance().startAutomaticCapture(RobotMap.frontElevatorCameraPort);
 	
+	// Initialize VideoSink 
 	VideoSink server = CameraServer.getInstance().getServer();
 
+	// Initialize varibles used in vision code
 	public String cameraState = "megaPeg";
 	Rect left;
 	Rect right;
@@ -61,55 +49,81 @@ public class OI {
 	int rightCenterX = 0;
 	int rightCenterY = 0;
 
-	public double getSpeed() {
-		return speed;
-	}
-
 	public OI() {
 
+		// Set Camera Resolution
 		megaPegCamera.setResolution(640, 480);
 		frontElevatorCamera.setResolution(640, 480);
 
+		// Set Joystick Buttons for the Right Joystick
+		JoystickButton toggleCamera = new JoystickButton(rightJoystick, 1);
+
+		// Set Joystick Buttons for the Left Joystick
+		JoystickButton toggleLight = new JoystickButton(leftJoystick, 1);
+		JoystickButton toggleTurtle = new JoystickButton(leftJoystick, 2);
+
+		// Set Joystick Buttons for the Aux Joystick
 		JoystickButton rollSnowPlowIn = new JoystickButton(auxJoystick, 1);
-		
-		JoystickButton liftFrontElevatorHigh = new JoystickButton(auxJoystick, 5);
-		//POVButton liftElevatorLow = new POVButton(auxJoystick, 180);
-		JoystickButton lowerFrontElevator = new JoystickButton(auxJoystick, 6);
+		JoystickButton driveBackElevator = new JoystickButton(auxJoystick, 2);
 		JoystickButton liftBackElevator = new JoystickButton(auxJoystick, 3);
 		JoystickButton lowerBackElevator = new JoystickButton(auxJoystick, 4);
-		JoystickButton driveBackElevator = new JoystickButton(auxJoystick, 2);
-		JoystickButton stopAllMotors = new JoystickButton(auxJoystick, 12);
+		JoystickButton liftFrontElevatorHigh = new JoystickButton(auxJoystick, 5);
+		JoystickButton lowerFrontElevator = new JoystickButton(auxJoystick, 6);
+		JoystickButton manuallyLowerFrontElevator = new JoystickButton(auxJoystick, 7);
+		JoystickButton manuallyLiftFrontElevator = new JoystickButton(auxJoystick, 8);
+		JoystickButton stopAllMotors = new JoystickButton(auxJoystick, 9);
+		JoystickButton manuallyLowerBackElevator = new JoystickButton(auxJoystick, 11);
+		JoystickButton manuallyLiftBackElevator = new JoystickButton(auxJoystick,12);
+		
+		// When the Left Joystick's Button 1 is pressed, toggle the light 
+		toggleLight.whenPressed(new light());
 
-		//JoystickButton releaseArms = new JoystickButton(auxJoystick, 5);
-	
-		stopAllMotors.whenPressed(new stopAllMotors());
+		// When the Right Joystick's Button 1 is pressed, change the camera view.
+		toggleCamera.whenPressed(new changeCameras());
 
-		SmartDashboard.putData("AutoLineup", new autoLineup());
-		SmartDashboard.putData("Reset Encoder", new resetElevatorEncoder());
-		SmartDashboard.putData("Roll", new rollSnowPlowIn());
+		toggleTurtle.whenPressed(new toggleDriveState(true));
+		toggleTurtle.whenReleased(new toggleDriveState(false));
 
+		// When the Aux Joystick's Button 1 is held, roll the wheely arm in. When the Aux Joystick's button 1 is released, stop the wheely arm.
 		rollSnowPlowIn.whileHeld(new rollSnowPlowIn());
 		rollSnowPlowIn.whenReleased(new stopSnowPlowMotor());
 
-		liftFrontElevatorHigh.whileHeld(new raiseFrontElevatorHighLimitSwitch());
-		liftFrontElevatorHigh.whenReleased(new stopFrontElevator());
-		lowerFrontElevator.whileHeld(new lowerFrontElevatorLimitSwitch());
-		lowerFrontElevator.whenReleased(new stopFrontElevator());
-		liftBackElevator.whileHeld(new raiseBackElevator());
-		liftBackElevator.whenReleased(new stopBackElevator());
-		lowerBackElevator.whileHeld(new lowerBackElevator());
-		lowerBackElevator.whenReleased(new stopBackElevator());
+		// When the Aux Joystick's Button 2 is held, drive the back elevator at 100% for 5 inches
 		driveBackElevator.whileHeld(new driveBackElevator(1.0, 5));
 		driveBackElevator.whenReleased(new stopDriveBackElevator());
 
-		new Thread(() -> {
+		// When the Aux Joystick's Button 3 is held, lift the back elevator. When the Aux Joystick's button 3 is released, stop the back elevator motors.
+		liftBackElevator.whenPressed(new raiseBackElevator());
+		manuallyLiftBackElevator.whenPressed(new manuallyLiftBackElevator());
+		manuallyLiftBackElevator.whenReleased(new stopBackElevator());
 
-			if(cameraState == "megaPeg"){
-				server.setSource(megaPegCamera);
-			} else if(cameraState == "frontElevator"){
-				server.setSource(frontElevatorCamera);
-			}
-			
+		// When the Aux Joystick's Button 4 is held, lower the back elevator. When the Aux Joystick's button 4 is released, stop the back elevator motors.
+		lowerBackElevator.whenPressed(new lowerBackElevator());
+		manuallyLowerBackElevator.whenPressed(new manuallyLowerBackElevator());
+		manuallyLowerBackElevator.whenReleased(new stopBackElevator());
+
+		// When the Aux Joystick's Button 5 is held, lift the front elevator. When the Aux Joystick's button 5 is released, stop the front elevator motors.
+		liftFrontElevatorHigh.whenPressed(new raiseFrontElevatorHighLimitSwitch());
+		manuallyLiftFrontElevator.whenPressed(new manuallyLiftFrontElevator());
+		manuallyLiftFrontElevator.whenReleased(new stopFrontElevator());
+
+		// When the Aux Joystick's Button 6 is held, lower the front elevator. When the Aux Joystick's button 6 is released, stop the front elevator motors.
+		lowerFrontElevator.whenPressed(new lowerFrontElevatorLimitSwitch());
+		manuallyLowerFrontElevator.whenPressed(new manuallyLowerFrontElevator());
+		manuallyLowerFrontElevator.whenReleased(new stopFrontElevator());
+		
+		// When the Aux Joystick's Button 12 is pressed, stop all of the motors.
+		stopAllMotors.whenPressed(new stopAllMotors());
+
+		// Puts Commands on the SmartDashboard
+		SmartDashboard.putData("AutoLineup", new autoLineup());
+		SmartDashboard.putData("Reset Encoder", new resetElevatorEncoder());
+		SmartDashboard.putData("Roll", new rollSnowPlowIn());
+		SmartDashboard.putData("Drive to platform", new driveBackElevator(1.0, 7.0));
+		SmartDashboard.putData("Climb", new climb());
+		
+		// Starts a new Vision Thread that runs 
+		new Thread(() -> {
 			CvSink cvSink = CameraServer.getInstance().getVideo();
 			CvSource outputStream = CameraServer.getInstance().putVideo("Processed Vision Camera", 640, 480);
 			
@@ -117,9 +131,13 @@ public class OI {
 			Mat output = new Mat();
 			
 			while(!Thread.interrupted()) {
+				if(cameraState == "megaPeg"){
+					server.setSource(megaPegCamera);
+				} else if(cameraState == "frontElevator"){
+					server.setSource(frontElevatorCamera);
+				}
         		cvSink.grabFrame(source, 100);
        			SmartDashboard.putString("Error Message", cvSink.getError());
-				//Imgproc.cvtColor(source, output, Imgproc.COLOR_BGR2GRAY);
 				gripPipeline.process(source);
 				output = gripPipeline.cvDilateOutput();
 				outputStream.putFrame(output);

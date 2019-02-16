@@ -1,7 +1,5 @@
 package frc.robot;
 
-import javax.swing.text.StyleContext.SmallAttributeSet;
-
 // Import packages needed to run
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Scheduler;

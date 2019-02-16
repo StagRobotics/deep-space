@@ -33,12 +33,7 @@ public class raiseFrontElevatorHigh extends Command {
   // Make this return true when this Command no longer needs to run execute()
   @Override
   protected boolean isFinished() {
-    // Checks if the Encoder Count is greater than the Height times 8. (The Lead screw rotates 8 times per inch)
-    if(Robot.m_wheelyscoop.getEncoderRevolutions() >= HEIGHT*8){
-      return true;
-    }else{
-      return false;
-    }
+    return true;
   }
 
   // Called once after isFinished returns true

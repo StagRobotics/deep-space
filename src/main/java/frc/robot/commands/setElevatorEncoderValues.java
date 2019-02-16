@@ -29,11 +29,6 @@ public class setElevatorEncoderValues extends Command {
     Robot.m_wheelyscoop.elevatorEncoder.setDistancePerPulse(0.0005);
     Robot.m_wheelyscoop.elevatorEncoder.setReverseDirection(false);
     Robot.m_wheelyscoop.elevatorEncoder.setSamplesToAverage(7);
-    Robot.m_backclimber.backElevatorDriveEncoder.setMaxPeriod(1);
-    Robot.m_backclimber.backElevatorDriveEncoder.setMinRate(10);
-    Robot.m_backclimber.backElevatorDriveEncoder.setDistancePerPulse(0.0005);
-    Robot.m_backclimber.backElevatorDriveEncoder.setReverseDirection(false);
-    Robot.m_backclimber.backElevatorDriveEncoder.setSamplesToAverage(7);
   }
 
   // Make this return true when this Command no longer needs to run execute()

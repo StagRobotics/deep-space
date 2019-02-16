@@ -10,11 +10,13 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj.command.Command;
 import frc.robot.Robot;
 
-public class stopAllMotors extends Command {
-  public stopAllMotors() {
+public class changeAutoClimbStep extends Command {
+ 
+  int localStep;
+ 
+  public changeAutoClimbStep(int step) {
     requires(Robot.m_backclimber);
-    requires(Robot.m_megapeg);
-    requires(Robot.m_wheelyscoop);
+    localStep = step;
   }
 
   // Called just before this Command runs the first time
@@ -25,11 +27,7 @@ public class stopAllMotors extends Command {
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    Robot.m_backclimber.stopBackElevatorDrive();
-    Robot.m_megapeg.stopMegaPeg();
-    Robot.m_wheelyscoop.stopFrontElevator();
-    Robot.m_backclimber.stopBackElevator();
-    Robot.m_wheelyscoop.stopSnowPlow();
+    Robot.m_backclimber.changeAutoStep(localStep);
   }
 
   // Make this return true when this Command no longer needs to run execute()

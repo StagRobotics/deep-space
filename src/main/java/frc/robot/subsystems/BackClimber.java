@@ -1,14 +1,19 @@
 package frc.robot.subsystems;
 
 // Import packages needed to run
-import frc.robot.commands.setElevatorEncoderValues;
 import edu.wpi.first.wpilibj.Talon;
+import edu.wpi.first.wpilibj.Ultrasonic;
 import edu.wpi.first.wpilibj.Relay;
+
+import java.awt.dnd.Autoscroll;
+
+import com.sun.jdi.request.StepRequest;
+
+import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.PWMTalonSRX;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import frc.robot.RobotMap;
-import edu.wpi.first.wpilibj.Encoder;
 
 public class BackClimber extends Subsystem {
   
@@ -23,34 +28,19 @@ public class BackClimber extends Subsystem {
   DigitalInput backElevatorTopLimitSwitch = new DigitalInput(RobotMap.backElevatorTopLimitSwitch);
   DigitalInput backElevatorBottomLimitSwitch = new DigitalInput(RobotMap.backElevatorBottomLimitSwitch);
 
-  // Initialize Encoders
-  public Encoder backElevatorDriveEncoder = new Encoder(RobotMap.backElevatorDriveEncoderPortOne, RobotMap.backElevatorDriveEncoderPortTwo, false, Encoder.EncodingType.k4X);
+  // Initialize Sonar
+  AnalogInput sonar = new AnalogInput(1);
 
   // Initialize Static Variables 
   double MOTORSPEED = 1.0;
   double WHEELDIAMETER = 2.0;
   double WHEELRADIUS = WHEELDIAMETER/2;
   double REVOLUTIONSTODISTANCE = 3.14 * (WHEELRADIUS*WHEELRADIUS);
+  int autoClimbStep = 0;
+
 
   @Override
   public void initDefaultCommand() {
-    // Sets the Default Command to set the Encoder Values
-    //setDefaultCommand(new setElevatorEncoderValues());
-  }
-
-  // Pulls the pins out of the Fork Arms to allow them to fall
-  public void pullArmPins(){
-    armRelease.set(Relay.Value.kForward);
-  }
-
-  // Pushes the pins into the Fork Arms to lock them in position
-  public void lockArmPins(){
-    armRelease.set(Relay.Value.kReverse);
-  }
-  
-  // Turns off the Spike for the Fork Arms
-  public void stopArmRelease(){
-    armRelease.set(Relay.Value.kOff);
   }
 
   // Lowers the back elevator based on the MOTORSPEED Variable
@@ -87,18 +77,15 @@ public class BackClimber extends Subsystem {
     backElevatorDriveMotor.set(0.0);
   }
 
-  // Converts the encoder count, that is on the back elevator's deployable wheels, to revolutions
-  public double getEncoderRevolutions(){
-    return backElevatorDriveEncoder.get()/5.68/360;
+  public double getDistanceFromPlatform(){
+    return sonar.getAverageVoltage()*(1000/9.8);
   }
 
-  // Converts the encoder revolutions, that is on the back elevator's deployable wheels, to distance in inches
-  public double getEncoderDistance(){
-    return getEncoderRevolutions()*REVOLUTIONSTODISTANCE;
+  public void changeAutoStep(int step){
+    autoClimbStep = step;
   }
 
-  // Resets the encoder, that is on the back elevator's deployable wheels, to zero
-  public void resetEncoder() {
-    backElevatorDriveEncoder.reset();
+  public int getAutoClimbStep(){
+    return autoClimbStep;
   }
 }

@@ -29,6 +29,8 @@ public class DriveTrain extends Subsystem {
 	// Initialize the starting state of the camera LED ring
 	public String lightState = "off";
 
+	// Initialize the starting state of the DriveState
+	public boolean driveState = false;
 	// Creates the DriveTrain Subsystem
 	public DriveTrain() {
 		super();
@@ -45,13 +47,17 @@ public class DriveTrain extends Subsystem {
 	public void log() {
 		SmartDashboard.putNumber("Left Motor", leftMotor.get());
 		SmartDashboard.putNumber("Right Motor", rightMotor.get());
+		SmartDashboard.putNumber("Distance to platform", Robot.m_backclimber.getDistanceFromPlatform());
+		SmartDashboard.putNumber("Auto Climb", Robot.m_backclimber.getAutoClimbStep());
+		SmartDashboard.putString("Light State", lightState);
+		SmartDashboard.putBoolean("Turtle Mode", Robot.m_drivetrain.driveState);
+		SmartDashboard.putBoolean("Front Elevator Bottom Limit Switch", Robot.m_wheelyscoop.frontElevatorBottomLimitSwitch.get());
+		SmartDashboard.putBoolean("Front Elevator Top Limit Switch", Robot.m_wheelyscoop.frontElevatorTopLimitSwitch.get());
 	}
 
 	// Passes speeds for the motors to the tankDrive part of DifferentialDrive
 	public void drive(double leftY, double rightY) {
 
-		boolean isLeftNegative = false;
-		boolean isRightNegative = false;
 		// Prevents motor movement if the input is between the DEADBAND and the negative of the DEADBAND
 		if (rightY < DEADBAND && rightY > -DEADBAND) {
 			rightY = 0.0;
@@ -61,31 +67,17 @@ public class DriveTrain extends Subsystem {
 		if (leftY < DEADBAND && leftY > -DEADBAND) {
 			leftY = 0.0;
 		}
-
-		if(leftY < 0.0){
-			isLeftNegative = true;
+		if(driveState == true){
+			robotDrive.tankDrive(leftY, rightY);
+		}
+		if(driveState == false){
+			leftY =0.5 * (leftY * Math.abs(leftY));
+			rightY = 0.5 * (rightY * Math.abs(rightY));
+			robotDrive.tankDrive(leftY, rightY);
 		}
 		
-		if(rightY < 0.0){
-			isRightNegative = true;
-		}
-
-		leftY = leftY * leftY;
-		rightY = rightY * rightY;
-
-		if(isLeftNegative){
-			leftY = leftY * -1.0;
-		}
-		
-		if(isRightNegative){
-			rightY = rightY * -1.0;
-		}
-
 		SmartDashboard.putNumber("LeftY", leftY);
 		SmartDashboard.putNumber("RightY", rightY);
-
-		// Drives the robot in a tank drive style
-		robotDrive.tankDrive(leftY, rightY);
 	}
 
 	// Inverts the left motor to go in the opposite direction
@@ -123,5 +115,9 @@ public class DriveTrain extends Subsystem {
 		} else if(Robot.m_oi.cameraState == "frontElevator"){
 			Robot.m_oi.cameraState = "megaPeg";
 		}
+	}
+
+	public void setDriveState(boolean state){
+		driveState = state;
 	}
 }
