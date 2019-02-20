@@ -61,17 +61,19 @@ public class OI {
 		// Set Joystick Buttons for the Left Joystick
 		JoystickButton toggleLight = new JoystickButton(leftJoystick, 1);
 		JoystickButton toggleTurtle = new JoystickButton(leftJoystick, 2);
+		JoystickButton autoLineUp = new JoystickButton(leftJoystick, 3);
 
 		// Set Joystick Buttons for the Aux Joystick
 		JoystickButton rollSnowPlowIn = new JoystickButton(auxJoystick, 1);
 		JoystickButton driveBackElevator = new JoystickButton(auxJoystick, 2);
 		JoystickButton liftBackElevator = new JoystickButton(auxJoystick, 3);
 		JoystickButton lowerBackElevator = new JoystickButton(auxJoystick, 4);
-		JoystickButton liftFrontElevatorHigh = new JoystickButton(auxJoystick, 5);
+		JoystickButton liftFrontElevatorLow = new JoystickButton(auxJoystick, 5);
 		JoystickButton lowerFrontElevator = new JoystickButton(auxJoystick, 6);
 		JoystickButton manuallyLowerFrontElevator = new JoystickButton(auxJoystick, 7);
 		JoystickButton manuallyLiftFrontElevator = new JoystickButton(auxJoystick, 8);
 		JoystickButton stopAllMotors = new JoystickButton(auxJoystick, 9);
+		JoystickButton liftFrontElevatorHigh = new JoystickButton(auxJoystick, 10);
 		JoystickButton manuallyLowerBackElevator = new JoystickButton(auxJoystick, 11);
 		JoystickButton manuallyLiftBackElevator = new JoystickButton(auxJoystick,12);
 		
@@ -83,6 +85,9 @@ public class OI {
 
 		toggleTurtle.whenPressed(new toggleDriveState(true));
 		toggleTurtle.whenReleased(new toggleDriveState(false));
+
+		autoLineUp.whileHeld(new autoLineup());
+		
 
 		// When the Aux Joystick's Button 1 is held, roll the wheely arm in. When the Aux Joystick's button 1 is released, stop the wheely arm.
 		rollSnowPlowIn.whileHeld(new rollSnowPlowIn());
@@ -102,6 +107,8 @@ public class OI {
 		manuallyLowerBackElevator.whenPressed(new manuallyLowerBackElevator());
 		manuallyLowerBackElevator.whenReleased(new stopBackElevator());
 
+		liftFrontElevatorLow.whenPressed(new raiseFrontElevatorLowLimitSwitch());
+
 		// When the Aux Joystick's Button 5 is held, lift the front elevator. When the Aux Joystick's button 5 is released, stop the front elevator motors.
 		liftFrontElevatorHigh.whenPressed(new raiseFrontElevatorHighLimitSwitch());
 		manuallyLiftFrontElevator.whenPressed(new manuallyLiftFrontElevator());
@@ -118,9 +125,10 @@ public class OI {
 		// Puts Commands on the SmartDashboard
 		SmartDashboard.putData("AutoLineup", new autoLineup());
 		SmartDashboard.putData("Reset Encoder", new resetElevatorEncoder());
-		SmartDashboard.putData("Roll", new rollSnowPlowIn());
+		SmartDashboard.putData("Roll", new rollSnowPlowOut());
 		SmartDashboard.putData("Drive to platform", new driveBackElevator(1.0, 7.0));
 		SmartDashboard.putData("Climb", new climb());
+		SmartDashboard.putData("Invert Drive", new invertDrive());
 		
 		// Starts a new Vision Thread that runs 
 		new Thread(() -> {

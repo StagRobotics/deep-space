@@ -31,7 +31,8 @@ public class MegaPeg extends Subsystem {
     // Prevents motor movement if the input is between the DEADBAND and the negative of the DEADBAND
     if (speed < DEADBAND && speed > -DEADBAND){
 			speed = 0.0;
-		}
+    }
+    
 
     // Sets the MegaPeg Motor to the given speed
     megaPegMotor.set(speed);

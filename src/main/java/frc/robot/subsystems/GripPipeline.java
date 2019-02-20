@@ -4,6 +4,8 @@ package frc.robot.subsystems;
 import java.util.ArrayList;
 import java.util.List;
 import edu.wpi.first.vision.VisionPipeline;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 import org.opencv.core.*;
 import org.opencv.imgproc.*;
 
@@ -15,6 +17,13 @@ public class GripPipeline implements VisionPipeline {
 	private Mat cvDilateOutput = new Mat();
 	private ArrayList<MatOfPoint> findContoursOutput = new ArrayList<MatOfPoint>();
 	private ArrayList<MatOfPoint> filterContoursOutput = new ArrayList<MatOfPoint>();
+	
+	public double hsvThresholdHueLow = 50.0;
+	public double hsvThresholdHueHigh = 82.0;
+	public double hsvThresholdSaturationLow = 0.0;
+	public double hsvThresholdSaturationHigh = 45.0;
+	public double hsvThresholdValueLow = 227.0;
+	public double hsvThresholdValueHigh = 255.0;
 
 	// Loads the core library from openCV
 	static {
@@ -24,10 +33,16 @@ public class GripPipeline implements VisionPipeline {
 	// This is the primary method that runs the entire pipeline and updates the outputs
 	@Override	public void process(Mat source0) {
 		// Step HSV_Threshold0:
+		SmartDashboard.putNumber("hsvThresholdHueLow", hsvThresholdHueLow);
+		SmartDashboard.putNumber("hsvThresholdHueHigh", hsvThresholdHueHigh);
+		SmartDashboard.putNumber("hsvThresholdSaturationLow", hsvThresholdSaturationLow);
+		SmartDashboard.putNumber("hsvThresholdSaturationHigh", hsvThresholdSaturationHigh);
+		SmartDashboard.putNumber("hsvThresholdValueLow", hsvThresholdValueLow);
+		SmartDashboard.putNumber("hsvThresholdValueHigh", hsvThresholdValueHigh);
 		Mat hsvThresholdInput = source0;
-		double[] hsvThresholdHue = {0.0, 180.0};
-		double[] hsvThresholdSaturation = {0.0, 23.0};
-		double[] hsvThresholdValue = {200.0, 255.0};
+		double[] hsvThresholdHue = {SmartDashboard.getNumber("hsvThresholdHueLow", hsvThresholdHueLow), SmartDashboard.getNumber("hsvThresholdHueHigh", hsvThresholdHueHigh)};
+		double[] hsvThresholdSaturation = {SmartDashboard.getNumber("hsvThresholdSaturationLow", hsvThresholdSaturationLow), SmartDashboard.getNumber("hsvThresholdSaturationHigh", hsvThresholdSaturationHigh)};
+		double[] hsvThresholdValue = {SmartDashboard.getNumber("hsvThresholdValueLow", hsvThresholdValueLow), SmartDashboard.getNumber("hsvThresholdValueHigh", hsvThresholdValueHigh)};
 		hsvThreshold(hsvThresholdInput, hsvThresholdHue, hsvThresholdSaturation, hsvThresholdValue, hsvThresholdOutput);
 
 		// Step CV_erode0:

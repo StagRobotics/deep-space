@@ -51,8 +51,11 @@ public class DriveTrain extends Subsystem {
 		SmartDashboard.putNumber("Auto Climb", Robot.m_backclimber.getAutoClimbStep());
 		SmartDashboard.putString("Light State", lightState);
 		SmartDashboard.putBoolean("Turtle Mode", Robot.m_drivetrain.driveState);
-		SmartDashboard.putBoolean("Front Elevator Bottom Limit Switch", Robot.m_wheelyscoop.frontElevatorBottomLimitSwitch.get());
-		SmartDashboard.putBoolean("Front Elevator Top Limit Switch", Robot.m_wheelyscoop.frontElevatorTopLimitSwitch.get());
+		SmartDashboard.putBoolean("Left Motor Invert", leftMotor.getInverted());
+		SmartDashboard.putBoolean("Right Motor Invert", rightMotor.getInverted());
+		SmartDashboard.putBoolean("Front Top Limit Switch", Robot.m_wheelyscoop.frontElevatorTopLimitSwitch.get());
+		SmartDashboard.putBoolean("Front Middle Limit Switch", Robot.m_wheelyscoop.frontElevatorLowLimitSwitch.get());
+		SmartDashboard.putBoolean("Front Bottom Limit Switch", Robot.m_wheelyscoop.frontElevatorBottomLimitSwitch.get());
 	}
 
 	// Passes speeds for the motors to the tankDrive part of DifferentialDrive
@@ -67,12 +70,17 @@ public class DriveTrain extends Subsystem {
 		if (leftY < DEADBAND && leftY > -DEADBAND) {
 			leftY = 0.0;
 		}
+		if(leftMotor.getInverted() == true && rightMotor.getInverted() == true){
+			double temp = leftY;
+			leftY = rightY;
+			rightY = temp;
+		}
 		if(driveState == true){
 			robotDrive.tankDrive(leftY, rightY);
 		}
 		if(driveState == false){
-			leftY =0.5 * (leftY * Math.abs(leftY));
-			rightY = 0.5 * (rightY * Math.abs(rightY));
+			leftY =0.65 * (leftY * Math.abs(leftY));
+			rightY = 0.65 * (rightY * Math.abs(rightY));
 			robotDrive.tankDrive(leftY, rightY);
 		}
 		
@@ -88,6 +96,27 @@ public class DriveTrain extends Subsystem {
 	// Inverts the right motor to go in the opposite direction
 	public void invertRightMotor(boolean invertRightMotor) {
 		rightMotor.setInverted(invertRightMotor);
+	}
+
+	public boolean checkInvertLeftMotor(){
+		return leftMotor.getInverted();
+	}
+
+	public boolean checkInvertRightMotor(){
+		return rightMotor.getInverted();
+	}
+
+	public void toggleMotorInversion(){
+		if(leftMotor.getInverted() == true){
+			leftMotor.setInverted(false);
+		} else if(leftMotor.getInverted() == false){
+			leftMotor.setInverted(true);
+		}
+		if(rightMotor.getInverted() == true){
+			rightMotor.setInverted(false);
+		} else if (rightMotor.getInverted() == false){
+			rightMotor.setInverted(true);
+		}
 	}
 
 	// Returns the current state of the camera LED light

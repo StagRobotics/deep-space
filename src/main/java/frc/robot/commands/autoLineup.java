@@ -32,7 +32,7 @@ public class autoLineup extends Command {
 	int rightArea = 0;
 	int rightCenterX = 0;
   int rightCenterY = 0;
-  int midPoint = 320;
+  int midPoint = 250;
   int finalTargetCenterX = 0;
 
 	// Initialize Timers
@@ -110,17 +110,17 @@ public class autoLineup extends Command {
 				
 				// This is the Logic that is used to move the robot based on the target's position
         if(finalTargetCenterX < 220){
-          new drive(0.3,0.4).execute();
+          new drive(0.15,0.2).execute();
           SmartDashboard.putString("AutoLine Up", "Too far right");
         } else if(finalTargetCenterX > 260){
-          new drive(0.4,0.3).execute();
+          new drive(0.2,0.15).execute();
           SmartDashboard.putString("AutoLine Up", "Too far left");
         } else {
-          new drive(0.3,0.3).execute();
+          new drive(0.2,0.2).execute();
           SmartDashboard.putString("AutoLine Up", "Just Right");
         }
-				/*SmartDashboard.putNumber("Final Target Center X", finalTargetCenterX);
-				SmartDashboard.putNumber("Left Height", leftHeight);
+				SmartDashboard.putNumber("Final Target Center X", finalTargetCenterX);
+				/*SmartDashboard.putNumber("Left Height", leftHeight);
 				SmartDashboard.putNumber("Left Width", leftWidth);
 				SmartDashboard.putNumber("Left X", leftX);
 				SmartDashboard.putNumber("Left Y", leftY);
@@ -140,10 +140,7 @@ public class autoLineup extends Command {
   @Override
   protected boolean isFinished() {
 		// Runs the command for 1 second and then stops
-    if(timer.get()>1){
-      return true;
-    }
-    return false;
+    return true;
   }
 
   // Called once after isFinished returns true
