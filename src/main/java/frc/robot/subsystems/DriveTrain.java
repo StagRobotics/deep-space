@@ -56,6 +56,7 @@ public class DriveTrain extends Subsystem {
 		SmartDashboard.putBoolean("Front Top Limit Switch", Robot.m_wheelyscoop.frontElevatorTopLimitSwitch.get());
 		SmartDashboard.putBoolean("Front Middle Limit Switch", Robot.m_wheelyscoop.frontElevatorLowLimitSwitch.get());
 		SmartDashboard.putBoolean("Front Bottom Limit Switch", Robot.m_wheelyscoop.frontElevatorBottomLimitSwitch.get());
+		
 	}
 
 	// Passes speeds for the motors to the tankDrive part of DifferentialDrive

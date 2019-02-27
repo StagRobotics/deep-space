@@ -7,6 +7,7 @@ import org.opencv.core.*;
 import org.opencv.imgproc.Imgproc;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.Timer;
+import java.lang.Math;
 
 public class autoLineup extends Command {
 
@@ -32,9 +33,17 @@ public class autoLineup extends Command {
 	int rightArea = 0;
 	int rightCenterX = 0;
   int rightCenterY = 0;
-  int midPoint = 250;
-  int finalTargetCenterX = 0;
-
+  int midPoint = 320;
+	int finalTargetCenterX = 0;
+	int targetX = 0;
+  int targetY = 0;
+	double targetBottomRightX = 0.0;
+	double targetTopLeftX = 0.0;
+	double targetBottomRightY = 0.0;
+	double targetTopLeftY = 0.0;
+	double secondPointX = 0.0;
+	double secondPointY = 0.0;
+	String driveOneTarget = "null";
 	// Initialize Timers
 	Timer timer = new Timer();
 	
@@ -42,7 +51,9 @@ public class autoLineup extends Command {
 	// Called once at the beginning of the command
   protected void initialize() {
 		// Starts the timer
-    timer.start();
+		timer.reset();
+		timer.start();
+		Robot.m_oi.megaPegCamera.setExposureManual(0);
   }
 
   // Called repeatedly when this Command is scheduled to run
@@ -79,10 +90,25 @@ public class autoLineup extends Command {
 						int targetWidth = target.width;
 						int targetX = target.x;
 						int targetY = target.y;
+						targetBottomRightX = target.br().x;
+						targetBottomRightY = target.br().y;
+						targetTopLeftX = target.tl().x;
+						targetTopLeftY = target.tl().y;
 						int targetArea = targetHeight*targetWidth;
 						int targetCenterX = (targetX + (targetX +targetWidth))/2;
 						int targetCenterY = (targetY + (targetY + targetHeight))/2;
+						
 						// Take the first countour and assign it to the right target
+						if(Robot.m_oi.gripPipeline.filterContoursOutput().size() == 1){
+							if(targetX < midPoint){
+								//Right Target
+								driveOneTarget = "right";
+							}
+							if(targetX > midPoint){
+								//Left Target
+								driveOneTarget = "left";
+							}
+						}
 						if(count == 1){
 							rightHeight = targetHeight;
 							rightWidth = targetWidth;
@@ -106,19 +132,41 @@ public class autoLineup extends Command {
 					}
 				}
         // Calculates where the center of the target is
-        finalTargetCenterX = (leftCenterX + rightCenterX)/2;
+				finalTargetCenterX = (leftCenterX + rightCenterX)/2;
+				
 				
 				// This is the Logic that is used to move the robot based on the target's position
-        if(finalTargetCenterX < 220){
-          new drive(0.15,0.2).execute();
+				if(Robot.m_oi.gripPipeline.filterContoursOutput().size() == 1){
+					if(driveOneTarget == "right"){
+						new drive(0.15,0.3).execute();
+						SmartDashboard.putString("AutoLine Up", "Too far right one target");
+					} else {
+						new drive(0.3,0.15).execute();
+						SmartDashboard.putString("AutoLine Up", "Too far left one target");
+					}
+				} else {
+					if(leftCenterX <= (640 - rightCenterX) - 10){
+						new drive(0.15,0.25).execute();
+						SmartDashboard.putString("AutoLine Up", "Too far right");
+					} else if	(leftCenterX >= (640 - rightCenterX) + 10){
+						new drive(0.25,0.15).execute();
+						SmartDashboard.putString("AutoLine Up", "Too far left");
+					} else {
+						new drive(0.2,0.2).execute();
+						SmartDashboard.putString("AutoLine Up", "Just Right");
+					}
+				}
+				
+				/*if(finalTargetCenterX < midPoint-20){
+          new drive(0.2,0.3).execute();
           SmartDashboard.putString("AutoLine Up", "Too far right");
-        } else if(finalTargetCenterX > 260){
-          new drive(0.2,0.15).execute();
+        } else if(finalTargetCenterX > midPoint+20){
+          new drive(0.3,0.2).execute();
           SmartDashboard.putString("AutoLine Up", "Too far left");
         } else {
-          new drive(0.2,0.2).execute();
+          new drive(0.3,0.3).execute();
           SmartDashboard.putString("AutoLine Up", "Just Right");
-        }
+        }*/
 				SmartDashboard.putNumber("Final Target Center X", finalTargetCenterX);
 				/*SmartDashboard.putNumber("Left Height", leftHeight);
 				SmartDashboard.putNumber("Left Width", leftWidth);
@@ -133,20 +181,32 @@ public class autoLineup extends Command {
 				SmartDashboard.putNumber("Right Y", rightY);
 				SmartDashboard.putNumber("Right Area", rightArea);
 				SmartDashboard.putNumber("Right Center X", rightCenterX);
-        SmartDashboard.putNumber("Right Center Y", rightCenterY);*/
+				SmartDashboard.putNumber("Right Center Y", rightCenterY);*/
+				SmartDashboard.putNumber("Target X", rightX);
+				SmartDashboard.putNumber("Target Y", rightY);
+				SmartDashboard.putNumber("Target Top X", targetTopLeftX);
+				SmartDashboard.putNumber("Target Bottom X", targetBottomRightX);
+				SmartDashboard.putNumber("Target Top Y", targetTopLeftY);
+				SmartDashboard.putNumber("Target Bottom Y", targetBottomRightY);
+				SmartDashboard.putNumber("Second Target x", secondPointX);
+				SmartDashboard.putNumber("Second Target Y", secondPointY);
   }
 
   // Make this return true when this Command no longer needs to run execute()
   @Override
   protected boolean isFinished() {
 		// Runs the command for 1 second and then stops
-    return true;
+		if(Robot.m_oi.getAuxJoystick().getRawButtonReleased(3)){
+			return true;
+		}
+    return false;
   }
 
   // Called once after isFinished returns true
   @Override
   protected void end() {
-    new drive(0.0,0.0);
+		Robot.m_oi.megaPegCamera.setExposureAuto();
+    
   }
 
   // Called when another command which requires one or more of the same

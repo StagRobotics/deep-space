@@ -24,8 +24,8 @@ public class OI {
 	private Joystick auxJoystick = new Joystick(2);
 
 	// Initialize Cameras
-	UsbCamera megaPegCamera = CameraServer.getInstance().startAutomaticCapture(RobotMap.megaPegCameraPort);
-	UsbCamera frontElevatorCamera = CameraServer.getInstance().startAutomaticCapture(RobotMap.frontElevatorCameraPort);
+	public UsbCamera megaPegCamera = CameraServer.getInstance().startAutomaticCapture(RobotMap.megaPegCameraPort);
+	public UsbCamera frontElevatorCamera = CameraServer.getInstance().startAutomaticCapture(RobotMap.frontElevatorCameraPort);
 	
 	// Initialize VideoSink 
 	VideoSink server = CameraServer.getInstance().getServer();
@@ -52,8 +52,10 @@ public class OI {
 	public OI() {
 
 		// Set Camera Resolution
-		megaPegCamera.setResolution(640, 480);
-		frontElevatorCamera.setResolution(640, 480);
+		megaPegCamera.setResolution(640, 320);
+		frontElevatorCamera.setResolution(640, 320);
+		//megaPegCamera.setExposureManual(0);
+		megaPegCamera.setExposureAuto();
 
 		// Set Joystick Buttons for the Right Joystick
 		JoystickButton toggleCamera = new JoystickButton(rightJoystick, 1);
@@ -74,8 +76,8 @@ public class OI {
 		JoystickButton manuallyLiftFrontElevator = new JoystickButton(auxJoystick, 8);
 		JoystickButton stopAllMotors = new JoystickButton(auxJoystick, 9);
 		JoystickButton liftFrontElevatorHigh = new JoystickButton(auxJoystick, 10);
-		JoystickButton manuallyLowerBackElevator = new JoystickButton(auxJoystick, 11);
-		JoystickButton manuallyLiftBackElevator = new JoystickButton(auxJoystick,12);
+		JoystickButton manuallyLowerBackElevator = new JoystickButton(auxJoystick, 12);
+		JoystickButton manuallyLiftBackElevator = new JoystickButton(auxJoystick,11);
 		
 		// When the Left Joystick's Button 1 is pressed, toggle the light 
 		toggleLight.whenPressed(new light());
@@ -86,7 +88,8 @@ public class OI {
 		toggleTurtle.whenPressed(new toggleDriveState(true));
 		toggleTurtle.whenReleased(new toggleDriveState(false));
 
-		autoLineUp.whileHeld(new autoLineup());
+		autoLineUp.whenPressed(new autoLineup());
+		autoLineUp.whenReleased(new drive(0.0, 0.0));
 		
 
 		// When the Aux Joystick's Button 1 is held, roll the wheely arm in. When the Aux Joystick's button 1 is released, stop the wheely arm.

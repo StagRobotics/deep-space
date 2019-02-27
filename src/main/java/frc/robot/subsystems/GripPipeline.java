@@ -18,11 +18,11 @@ public class GripPipeline implements VisionPipeline {
 	private ArrayList<MatOfPoint> findContoursOutput = new ArrayList<MatOfPoint>();
 	private ArrayList<MatOfPoint> filterContoursOutput = new ArrayList<MatOfPoint>();
 	
-	public double hsvThresholdHueLow = 50.0;
-	public double hsvThresholdHueHigh = 82.0;
+	public double hsvThresholdHueLow = 0.0;
+	public double hsvThresholdHueHigh = 180.0;
 	public double hsvThresholdSaturationLow = 0.0;
-	public double hsvThresholdSaturationHigh = 45.0;
-	public double hsvThresholdValueLow = 227.0;
+	public double hsvThresholdSaturationHigh = 255.0;
+	public double hsvThresholdValueLow = 55.0;
 	public double hsvThresholdValueHigh = 255.0;
 
 	// Loads the core library from openCV
@@ -32,17 +32,25 @@ public class GripPipeline implements VisionPipeline {
 
 	// This is the primary method that runs the entire pipeline and updates the outputs
 	@Override	public void process(Mat source0) {
+
+		hsvThresholdHueLow = SmartDashboard.getNumber("hsvThresholdHueLow", hsvThresholdHueLow);
+ 		hsvThresholdHueHigh = SmartDashboard.getNumber("hsvThresholdHueHigh", hsvThresholdHueHigh);
+		hsvThresholdSaturationLow = SmartDashboard.getNumber("hsvThresholdSaturationLow", hsvThresholdSaturationLow);
+		hsvThresholdSaturationHigh = SmartDashboard.getNumber("hsvThresholdSaturationHigh", hsvThresholdSaturationHigh);
+		hsvThresholdValueLow = SmartDashboard.getNumber("hsvThresholdValueLow", hsvThresholdValueLow);
+		hsvThresholdValueHigh = SmartDashboard.getNumber("hsvThresholdValueHigh", hsvThresholdValueHigh);
 		// Step HSV_Threshold0:
+		Mat hsvThresholdInput = source0;
+
+		double[] hsvThresholdHue = {hsvThresholdHueLow, hsvThresholdHueHigh};
+		double[] hsvThresholdSaturation = {hsvThresholdSaturationLow, hsvThresholdSaturationHigh};
+		double[] hsvThresholdValue = {hsvThresholdValueLow, hsvThresholdValueHigh};
 		SmartDashboard.putNumber("hsvThresholdHueLow", hsvThresholdHueLow);
 		SmartDashboard.putNumber("hsvThresholdHueHigh", hsvThresholdHueHigh);
 		SmartDashboard.putNumber("hsvThresholdSaturationLow", hsvThresholdSaturationLow);
 		SmartDashboard.putNumber("hsvThresholdSaturationHigh", hsvThresholdSaturationHigh);
 		SmartDashboard.putNumber("hsvThresholdValueLow", hsvThresholdValueLow);
 		SmartDashboard.putNumber("hsvThresholdValueHigh", hsvThresholdValueHigh);
-		Mat hsvThresholdInput = source0;
-		double[] hsvThresholdHue = {SmartDashboard.getNumber("hsvThresholdHueLow", hsvThresholdHueLow), SmartDashboard.getNumber("hsvThresholdHueHigh", hsvThresholdHueHigh)};
-		double[] hsvThresholdSaturation = {SmartDashboard.getNumber("hsvThresholdSaturationLow", hsvThresholdSaturationLow), SmartDashboard.getNumber("hsvThresholdSaturationHigh", hsvThresholdSaturationHigh)};
-		double[] hsvThresholdValue = {SmartDashboard.getNumber("hsvThresholdValueLow", hsvThresholdValueLow), SmartDashboard.getNumber("hsvThresholdValueHigh", hsvThresholdValueHigh)};
 		hsvThreshold(hsvThresholdInput, hsvThresholdHue, hsvThresholdSaturation, hsvThresholdValue, hsvThresholdOutput);
 
 		// Step CV_erode0:
@@ -70,7 +78,7 @@ public class GripPipeline implements VisionPipeline {
 
 		// Step Filter_Contours0:
 		ArrayList<MatOfPoint> filterContoursContours = findContoursOutput;
-		double filterContoursMinArea = 1000.0;
+		double filterContoursMinArea = 0.0;
 		double filterContoursMinPerimeter = 0.0;
 		double filterContoursMinWidth = 0.0;
 		double filterContoursMaxWidth = 1000.0;
