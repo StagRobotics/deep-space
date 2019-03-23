@@ -10,9 +10,9 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj.command.Command;
 import frc.robot.Robot;
 
-public class lowerFrontElevator extends Command {
-  public lowerFrontElevator() {
-    requires(Robot.m_wheelyscoop);
+public class changeCameraExposureBlack extends Command {
+  public changeCameraExposureBlack() {
+    requires(Robot.m_drivetrain);
   }
 
   // Called just before this Command runs the first time
@@ -23,23 +23,18 @@ public class lowerFrontElevator extends Command {
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    Robot.m_wheelyscoop.lowerFrontElevator();
+    Robot.m_oi.megaPegCamera.setExposureManual(0);
   }
 
   // Make this return true when this Command no longer needs to run execute()
   @Override
   protected boolean isFinished() {
-    if(Robot.m_wheelyscoop.getEncoderRevolutions() <= 0){
-      return true;
-    } else {
-      return false;
-    }
+    return true;
   }
 
   // Called once after isFinished returns true
   @Override
   protected void end() {
-    Robot.m_wheelyscoop.stopFrontElevator();
   }
 
   // Called when another command which requires one or more of the same

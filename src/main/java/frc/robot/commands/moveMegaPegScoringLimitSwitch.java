@@ -10,10 +10,9 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj.command.Command;
 import frc.robot.Robot;
 
-public class setElevatorEncoderValues extends Command {
-  public setElevatorEncoderValues() {
-    requires(Robot.m_wheelyscoop);
-    requires(Robot.m_backclimber);
+public class moveMegaPegScoringLimitSwitch extends Command {
+  public moveMegaPegScoringLimitSwitch() {
+    requires(Robot.m_megapeg);
   }
 
   // Called just before this Command runs the first time
@@ -24,22 +23,19 @@ public class setElevatorEncoderValues extends Command {
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    Robot.m_wheelyscoop.elevatorEncoder.setMaxPeriod(1);
-    Robot.m_wheelyscoop.elevatorEncoder.setMinRate(10);
-    Robot.m_wheelyscoop.elevatorEncoder.setDistancePerPulse(0.0005);
-    Robot.m_wheelyscoop.elevatorEncoder.setReverseDirection(false);
-    Robot.m_wheelyscoop.elevatorEncoder.setSamplesToAverage(7);
+    Robot.m_megapeg.moveMegaPegUpLimitSwitch();
   }
 
   // Make this return true when this Command no longer needs to run execute()
   @Override
   protected boolean isFinished() {
-    return true;
+    return Robot.m_megapeg.getBottomLimitSwitch();
   }
 
   // Called once after isFinished returns true
   @Override
   protected void end() {
+    Robot.m_megapeg.stopMegaPeg();
   }
 
   // Called when another command which requires one or more of the same

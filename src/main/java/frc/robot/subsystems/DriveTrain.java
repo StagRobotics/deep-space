@@ -53,9 +53,10 @@ public class DriveTrain extends Subsystem {
 		SmartDashboard.putBoolean("Turtle Mode", Robot.m_drivetrain.driveState);
 		SmartDashboard.putBoolean("Left Motor Invert", leftMotor.getInverted());
 		SmartDashboard.putBoolean("Right Motor Invert", rightMotor.getInverted());
-		SmartDashboard.putBoolean("Front Top Limit Switch", Robot.m_wheelyscoop.frontElevatorTopLimitSwitch.get());
+		SmartDashboard.putBoolean("Mega Peg bottom", Robot.m_megapeg.getBottomLimitSwitch());
+		SmartDashboard.putBoolean("Mega Peg Up", Robot.m_megapeg.getTopLimitSwitch());
 		SmartDashboard.putBoolean("Front Middle Limit Switch", Robot.m_wheelyscoop.frontElevatorLowLimitSwitch.get());
-		SmartDashboard.putBoolean("Front Bottom Limit Switch", Robot.m_wheelyscoop.frontElevatorBottomLimitSwitch.get());
+		SmartDashboard.putBoolean("back Bottom Limit Switch", Robot.m_backclimber.backElevatorBottomLimitSwitch.get());
 		
 	}
 

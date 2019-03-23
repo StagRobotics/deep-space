@@ -18,7 +18,6 @@ public class WheelyScoop extends Subsystem {
   public Relay snowPlowMotor = new Relay(RobotMap.snowPlowMotor);
 
   // Initialize Encoders
-  public Encoder elevatorEncoder = new Encoder(RobotMap.frontElevatorEncoderPortOne, RobotMap.frontElevatorEncoderPortTwo, false, Encoder.EncodingType.k4X);
   
   // Initialize Limit Switches
   public DigitalInput frontElevatorTopLimitSwitch = new DigitalInput(RobotMap.frontElevatorTopLimitSwitch);
@@ -33,16 +32,6 @@ public class WheelyScoop extends Subsystem {
   public void initDefaultCommand() {
     // Sets the Default Command to set the Encoder Values
     // setDefaultCommand(new setElevatorEncoderValues());
-  }
-
-  // Resets the encoder that is on the front elevator's leadscrew to zero
-  public void resetEncoder() {
-    elevatorEncoder.reset();
-  }
-
-  // Converts the Encoder count to revolutions
-  public double getEncoderRevolutions(){
-    return elevatorEncoder.get()/5.68/360;
   }
 
   // Lifts the front elevator based on the MOTORSPEED variable

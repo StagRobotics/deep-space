@@ -18,11 +18,11 @@ public class GripPipeline implements VisionPipeline {
 	private ArrayList<MatOfPoint> findContoursOutput = new ArrayList<MatOfPoint>();
 	private ArrayList<MatOfPoint> filterContoursOutput = new ArrayList<MatOfPoint>();
 	
-	public double hsvThresholdHueLow = 0.0;
-	public double hsvThresholdHueHigh = 180.0;
-	public double hsvThresholdSaturationLow = 0.0;
+	public double hsvThresholdHueLow = 50.0;
+	public double hsvThresholdHueHigh = 80.0;
+	public double hsvThresholdSaturationLow = 10.0;
 	public double hsvThresholdSaturationHigh = 255.0;
-	public double hsvThresholdValueLow = 55.0;
+	public double hsvThresholdValueLow = 50.0;
 	public double hsvThresholdValueHigh = 255.0;
 
 	// Loads the core library from openCV

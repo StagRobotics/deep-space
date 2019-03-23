@@ -15,8 +15,8 @@ public class RobotMap {
   public static int cameraLEDPort = 1;
 
   // Digital
-  public static int frontElevatorEncoderPortOne = 0;
-  public static int frontElevatorEncoderPortTwo = 1;
+  public static int megaPegTopLimitSwitch = 0;
+  public static int megaPegBottomLimitSwitch = 1;
   public static int frontElevatorTopLimitSwitch = 2;
   public static int frontElevatorLowLimitSwitch = 3;
   public static int frontElevatorBottomLimitSwitch = 4;

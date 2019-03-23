@@ -4,6 +4,7 @@ package frc.robot.subsystems;
 import frc.robot.RobotMap;
 import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.command.Subsystem;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Spark;
 import frc.robot.commands.*;
 
@@ -14,6 +15,9 @@ public class MegaPeg extends Subsystem {
 
   // Initialize Motor Controllers
   public SpeedController megaPegMotor = new Spark(RobotMap.megaPegMotor);
+
+  DigitalInput topLimitSwitch = new DigitalInput(RobotMap.megaPegTopLimitSwitch);
+  DigitalInput bottomLimitSwitch = new DigitalInput(RobotMap.megaPegBottomLimitSwitch);
 
   @Override
   public void initDefaultCommand() {
@@ -32,9 +36,25 @@ public class MegaPeg extends Subsystem {
     if (speed < DEADBAND && speed > -DEADBAND){
 			speed = 0.0;
     }
-    
-
     // Sets the MegaPeg Motor to the given speed
+    if(bottomLimitSwitch.get() == false && speed > 0.0){
+      speed = 0.0;
+    }
     megaPegMotor.set(speed);
+  }
+
+  public void moveMegaPegUpLimitSwitch(){
+    megaPegMotor.set(-0.75);
+  }
+
+  public void moveMegaPegDownLimitSwitch(){
+    megaPegMotor.set(0.30);
+  }
+  public boolean getTopLimitSwitch(){
+    return topLimitSwitch.get();
+  }
+
+  public boolean getBottomLimitSwitch(){
+    return bottomLimitSwitch.get();
   }
 }

@@ -10,40 +10,26 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj.command.Command;
 import frc.robot.Robot;
 
-public class raiseFrontElevatorLowLimitSwitch extends Command {
-  
-  String elevatorPosition;
-
-  public raiseFrontElevatorLowLimitSwitch() {
-    requires(Robot.m_wheelyscoop);
+public class moveMegaPegDownLimitSwitch extends Command {
+  public moveMegaPegDownLimitSwitch() {
+    requires(Robot.m_megapeg);
   }
 
   // Called just before this Command runs the first time
   @Override
   protected void initialize() {
-    /*if(Robot.m_wheelyscoop.checkFrontElevatorBottom()){
-      elevatorPosition = "Up";
-    } else if (Robot.m_wheelyscoop.checkFrontElevatorUp()){
-      elevatorPosition = "Down";
-    }*/
-   
   }
 
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    /*if(elevatorPosition == "Up"){
-      Robot.m_wheelyscoop.lowerFrontElevator();
-    } else if(elevatorPosition == "Down"){
-      Robot.m_wheelyscoop.liftFrontElevator();
-    }*/
-    Robot.m_wheelyscoop.liftFrontElevator();
+    Robot.m_megapeg.moveMegaPegDownLimitSwitch();
   }
 
   // Make this return true when this Command no longer needs to run execute()
   @Override
   protected boolean isFinished() {
-    if(Robot.m_wheelyscoop.checkFrontElevatorLow()){
+    if(Robot.m_megapeg.getBottomLimitSwitch()){
       return false;
     } else {
       return true;
@@ -53,7 +39,7 @@ public class raiseFrontElevatorLowLimitSwitch extends Command {
   // Called once after isFinished returns true
   @Override
   protected void end() {
-    Robot.m_wheelyscoop.stopFrontElevator();
+    Robot.m_megapeg.stopMegaPeg();
   }
 
   // Called when another command which requires one or more of the same
