@@ -271,14 +271,15 @@ public class autoLineupLeft extends Command {
 			SmartDashboard.putNumber("Left Width", leftWidth);
 			SmartDashboard.putNumber("Left X", leftX);
 			SmartDashboard.putNumber("Left Y", leftY);
-			SmartDashboard.putNumber("Left Area", leftArea);
+			*/SmartDashboard.putNumber("Left Area", leftArea);
+			SmartDashboard.putNumber("Right Area", rightArea);/*
 			SmartDashboard.putNumber("Left Center X", leftCenterX);
 			SmartDashboard.putNumber("Left Center Y", leftCenterY);
 			SmartDashboard.putNumber("Right Height", rightHeight);
 			SmartDashboard.putNumber("Right Width", rightWidth);
 			SmartDashboard.putNumber("Right X", rightX);
 			SmartDashboard.putNumber("Right Y", rightY);
-			SmartDashboard.putNumber("Right Area", rightArea);
+			
 			SmartDashboard.putNumber("Right Center X", rightCenterX);
 			SmartDashboard.putNumber("Right Center Y", rightCenterY);
 			SmartDashboard.putNumber("Target X", rightX);

@@ -56,7 +56,7 @@ public class OI {
 
 		// Set Camera Resolution
 		//megaPegCamera.setResolution(640, 320);
-		megaPegCamera.setResolution(160, 120);
+		megaPegCamera.setResolution(320, 240);
 		frontElevatorCamera.setResolution(160, 120);
 		
 		//megaPegCamera.setExposureManual(0);
