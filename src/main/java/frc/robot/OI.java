@@ -71,9 +71,9 @@ public class OI {
 		// Set Joystick Buttons for the Left Joystick
 		JoystickButton toggleLight = new JoystickButton(leftJoystick, 1);
 		JoystickButton toggleTurtle = new JoystickButton(leftJoystick, 2);
-		JoystickButton autoLineUpLeft = new JoystickButton(leftJoystick, 3);
-		JoystickButton autoLineUpRight = new JoystickButton(leftJoystick, 4);
-
+		//JoystickButton autoLineUpLeft = new JoystickButton(leftJoystick, 3);
+		//JoystickButton autoLineUpRight = new JoystickButton(leftJoystick, 4);
+		JoystickButton autoLineUpLimeLight = new JoystickButton(leftJoystick, 3);
 		// Set Joystick Buttons for the Aux Joystick
 		JoystickButton rollSnowPlowIn = new JoystickButton(auxJoystick, 1);
 		JoystickButton driveBackElevator = new JoystickButton(auxJoystick, 2);
@@ -102,13 +102,16 @@ public class OI {
 		toggleTurtle.whenPressed(new toggleDriveState(true));
 		toggleTurtle.whenReleased(new toggleDriveState(false));
 
-		autoLineUpLeft.whenPressed(new autoLineupLeft());
+		/*autoLineUpLeft.whenPressed(new autoLineupLeft());
 		autoLineUpLeft.whenReleased(new drive(0.0, 0.0));
 		autoLineUpLeft.whenReleased(new changeCameraExposure());
 
 		autoLineUpRight.whenPressed(new autoLineupRight());
 		autoLineUpRight.whenReleased(new drive(0.0, 0.0));
-		autoLineUpRight.whenReleased(new changeCameraExposure());
+		autoLineUpRight.whenReleased(new changeCameraExposure());*/
+		
+		autoLineUpLimeLight.whenPressed(new limelightLineUp());
+		autoLineUpLimeLight.whenReleased(new drive(0.0, 0.0));
 
 		megaPegButtonUp.whenPressed(new moveMegaPegUpLimitSwitch());
 		megaPegButtonDown.whenPressed(new moveMegaPegDownLimitSwitch());

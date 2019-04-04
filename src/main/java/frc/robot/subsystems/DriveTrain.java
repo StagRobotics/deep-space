@@ -5,12 +5,13 @@ import frc.robot.Robot;
 import frc.robot.RobotMap;
 import frc.robot.commands.tankDriveWithJoystick;
 import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.PWMVictorSPX;
 import edu.wpi.first.wpilibj.Relay;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-
+import edu.wpi.first.networktables.*;
 public class DriveTrain extends Subsystem {
 
 	// Initialize Static Variables
@@ -28,7 +29,11 @@ public class DriveTrain extends Subsystem {
 	
 	// Initialize the starting state of the camera LED ring
 	public String lightState = "off";
-
+	NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight");
+	NetworkTableEntry tx = table.getEntry("tx");
+	NetworkTableEntry ty = table.getEntry("ty");
+	NetworkTableEntry ta = table.getEntry("ta");
+	NetworkTableEntry tv = table.getEntry("tv");
 	// Initialize the starting state of the DriveState
 	public boolean driveState = false;
 	// Creates the DriveTrain Subsystem
@@ -45,6 +50,15 @@ public class DriveTrain extends Subsystem {
 
 	// This is called once every millisecond and is used to print information to the SmartDashboard
 	public void log() {
+		double valid = tv.getDouble(0.0);
+		double x = tx.getDouble(0.0);
+		double y = ty.getDouble(0.0);
+		double area = ta.getDouble(0.0);
+		double areaGuess = 8.2/24;
+		SmartDashboard.putNumber("LimeLight Targets", valid);
+		SmartDashboard.putNumber("LimeLight X", x);
+		SmartDashboard.putNumber("LimeLight Y", y);
+		SmartDashboard.putNumber("LimeLight Area", area);
 		SmartDashboard.putNumber("Left Motor", leftMotor.get());
 		SmartDashboard.putNumber("Right Motor", rightMotor.get());
 		SmartDashboard.putNumber("Distance to platform", Robot.m_backclimber.getDistanceFromPlatform());
@@ -57,7 +71,7 @@ public class DriveTrain extends Subsystem {
 		SmartDashboard.putBoolean("Mega Peg Up", Robot.m_megapeg.getTopLimitSwitch());
 		SmartDashboard.putBoolean("Front Middle Limit Switch", Robot.m_wheelyscoop.frontElevatorLowLimitSwitch.get());
 		SmartDashboard.putBoolean("back Bottom Limit Switch", Robot.m_backclimber.backElevatorBottomLimitSwitch.get());
-		
+		SmartDashboard.putNumber("Distance", area*areaGuess);
 	}
 
 	// Passes speeds for the motors to the tankDrive part of DifferentialDrive
