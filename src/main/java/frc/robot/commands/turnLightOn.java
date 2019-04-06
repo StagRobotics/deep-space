@@ -1,17 +1,10 @@
-/*----------------------------------------------------------------------------*/
-/* Copyright (c) 2018 FIRST. All Rights Reserved.                             */
-/* Open Source Software - may be modified and shared by FRC teams. The code   */
-/* must be accompanied by the FIRST BSD license file in the root directory of */
-/* the project.                                                               */
-/*----------------------------------------------------------------------------*/
-
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.command.Command;
 import frc.robot.Robot;
 
-public class changeCameraExposureBlack extends Command {
-  public changeCameraExposureBlack() {
+public class turnLightOn extends Command {
+  public turnLightOn() {
     requires(Robot.m_drivetrain);
   }
 
@@ -23,7 +16,9 @@ public class changeCameraExposureBlack extends Command {
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    Robot.m_oi.megaPegCamera.setExposureManual(0);
+
+    // Sets the Lightstate on the Networktable to 3.0, which is on
+    Robot.m_drivetrain.lightstate.setDouble(3.0);
   }
 
   // Make this return true when this Command no longer needs to run execute()

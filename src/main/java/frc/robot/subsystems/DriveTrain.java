@@ -4,14 +4,13 @@ package frc.robot.subsystems;
 import frc.robot.Robot;
 import frc.robot.RobotMap;
 import frc.robot.commands.tankDriveWithJoystick;
-import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.PWMVictorSPX;
-import edu.wpi.first.wpilibj.Relay;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.networktables.*;
+
 public class DriveTrain extends Subsystem {
 
 	// Initialize Static Variables
@@ -24,18 +23,18 @@ public class DriveTrain extends Subsystem {
 	// Initialize the type of drive -- DiffernetialDrive is used for Tank Drive
 	public DifferentialDrive robotDrive = new DifferentialDrive(leftMotor, rightMotor);
 
-	// Initialize the light used for the camera LED ring
-	public Relay light = new Relay(RobotMap.cameraLEDPort);
-	
-	// Initialize the starting state of the camera LED ring
-	public String lightState = "off";
+	// Initialize Variables for NetworkTable/LimeLight
 	NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight");
 	NetworkTableEntry tx = table.getEntry("tx");
 	NetworkTableEntry ty = table.getEntry("ty");
 	NetworkTableEntry ta = table.getEntry("ta");
 	NetworkTableEntry tv = table.getEntry("tv");
+	public NetworkTableEntry pipeline = table.getEntry("pipeline");
+	public NetworkTableEntry lightstate = table.getEntry("ledMode");
+	
 	// Initialize the starting state of the DriveState
 	public boolean driveState = false;
+
 	// Creates the DriveTrain Subsystem
 	public DriveTrain() {
 		super();
@@ -54,24 +53,20 @@ public class DriveTrain extends Subsystem {
 		double x = tx.getDouble(0.0);
 		double y = ty.getDouble(0.0);
 		double area = ta.getDouble(0.0);
+		double ledState = lightstate.getDouble(0.0);
 		double areaGuess = 8.2/24;
+		SmartDashboard.putNumber("Led State", ledState);
 		SmartDashboard.putNumber("LimeLight Targets", valid);
 		SmartDashboard.putNumber("LimeLight X", x);
 		SmartDashboard.putNumber("LimeLight Y", y);
 		SmartDashboard.putNumber("LimeLight Area", area);
 		SmartDashboard.putNumber("Left Motor", leftMotor.get());
 		SmartDashboard.putNumber("Right Motor", rightMotor.get());
-		SmartDashboard.putNumber("Distance to platform", Robot.m_backclimber.getDistanceFromPlatform());
-		SmartDashboard.putNumber("Auto Climb", Robot.m_backclimber.getAutoClimbStep());
-		SmartDashboard.putString("Light State", lightState);
 		SmartDashboard.putBoolean("Turtle Mode", Robot.m_drivetrain.driveState);
 		SmartDashboard.putBoolean("Left Motor Invert", leftMotor.getInverted());
 		SmartDashboard.putBoolean("Right Motor Invert", rightMotor.getInverted());
-		SmartDashboard.putBoolean("Mega Peg bottom", Robot.m_megapeg.getBottomLimitSwitch());
-		SmartDashboard.putBoolean("Mega Peg Up", Robot.m_megapeg.getTopLimitSwitch());
-		SmartDashboard.putBoolean("Front Middle Limit Switch", Robot.m_wheelyscoop.frontElevatorLowLimitSwitch.get());
-		SmartDashboard.putBoolean("back Bottom Limit Switch", Robot.m_backclimber.backElevatorBottomLimitSwitch.get());
 		SmartDashboard.putNumber("Distance", area*areaGuess);
+		SmartDashboard.putNumber("Pipeline", pipeline.getDouble(0.0));
 	}
 
 	// Passes speeds for the motors to the tankDrive part of DifferentialDrive
@@ -86,20 +81,27 @@ public class DriveTrain extends Subsystem {
 		if (leftY < DEADBAND && leftY > -DEADBAND) {
 			leftY = 0.0;
 		}
+
+		// Flips the motors if they are both inverted
 		if(leftMotor.getInverted() == true && rightMotor.getInverted() == true){
 			double temp = leftY;
 			leftY = rightY;
 			rightY = temp;
 		}
+
+		// If turbo mode is on then allow motors to run at 100%
 		if(driveState == true){
 			robotDrive.tankDrive(leftY, rightY);
 		}
+		
+		// If turbo mdoe is off then run motors at 65% scale
 		if(driveState == false){
 			leftY =0.65 * (leftY * Math.abs(leftY));
 			rightY = 0.65 * (rightY * Math.abs(rightY));
 			robotDrive.tankDrive(leftY, rightY);
 		}
 		
+		// Puts the values the code is sending to the motors
 		SmartDashboard.putNumber("LeftY", leftY);
 		SmartDashboard.putNumber("RightY", rightY);
 	}
@@ -114,14 +116,17 @@ public class DriveTrain extends Subsystem {
 		rightMotor.setInverted(invertRightMotor);
 	}
 
+	// Checks if the left motor is inverted
 	public boolean checkInvertLeftMotor(){
 		return leftMotor.getInverted();
 	}
 
+	// Checks if the right motor is inverted
 	public boolean checkInvertRightMotor(){
 		return rightMotor.getInverted();
 	}
 
+	// Used to toggle Motor Inversion
 	public void toggleMotorInversion(){
 		if(leftMotor.getInverted() == true){
 			leftMotor.setInverted(false);
@@ -135,33 +140,7 @@ public class DriveTrain extends Subsystem {
 		}
 	}
 
-	// Returns the current state of the camera LED light
-	public String getLightState(){
-		return lightState;
-	}
-
-	// Turns the light on or off based on its previous state
-	public void toggleLight(){
-		// Changes the light to on if called when the light is off
-		if(lightState == "off"){
-			lightState = "on";
-			light.set(Relay.Value.kForward);
-		}
-		// Changes the light to off if called when the light is on
-		else if(lightState == "on"){
-			lightState = "off";
-			light.set(Relay.Value.kOff);
-		}
-	}
-
-	public void toggleCamera(){
-		if(Robot.m_oi.cameraState == "megaPeg"){
-			Robot.m_oi.cameraState = "frontElevator";
-		} else if(Robot.m_oi.cameraState == "frontElevator"){
-			Robot.m_oi.cameraState = "megaPeg";
-		}
-	}
-
+	// Used to set the local driveState variable from other commands
 	public void setDriveState(boolean state){
 		driveState = state;
 	}

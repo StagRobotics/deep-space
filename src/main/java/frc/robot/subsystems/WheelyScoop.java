@@ -5,7 +5,6 @@ import edu.wpi.first.wpilibj.command.Subsystem;
 import frc.robot.RobotMap;
 import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.Talon;
-import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Relay;;
 
@@ -16,8 +15,6 @@ public class WheelyScoop extends Subsystem {
 
   // Initialize Spikes
   public Relay snowPlowMotor = new Relay(RobotMap.snowPlowMotor);
-
-  // Initialize Encoders
   
   // Initialize Limit Switches
   public DigitalInput frontElevatorTopLimitSwitch = new DigitalInput(RobotMap.frontElevatorTopLimitSwitch);
@@ -30,8 +27,6 @@ public class WheelyScoop extends Subsystem {
 
   @Override
   public void initDefaultCommand() {
-    // Sets the Default Command to set the Encoder Values
-    // setDefaultCommand(new setElevatorEncoderValues());
   }
 
   // Lifts the front elevator based on the MOTORSPEED variable

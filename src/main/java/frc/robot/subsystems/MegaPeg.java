@@ -32,28 +32,37 @@ public class MegaPeg extends Subsystem {
 
   // Controls the MegaPeg Motor with a given speed
   public void moveMegaPegWithJoystick(double speed){
+
     // Prevents motor movement if the input is between the DEADBAND and the negative of the DEADBAND
     if (speed < DEADBAND && speed > -DEADBAND){
 			speed = 0.0;
     }
-    // Sets the MegaPeg Motor to the given speed
+
+    // Prevents manually Megapeg controls from overriding the bottom limit switch
     if(bottomLimitSwitch.get() == false && speed > 0.0){
       speed = 0.0;
     }
+
+    // Sets MegaPeg Motor to the given Speeds
     megaPegMotor.set(speed);
   }
 
+  // Moves Mega Peg Up at 75% Speed
   public void moveMegaPegUpLimitSwitch(){
     megaPegMotor.set(-0.75);
   }
 
+  // Move Mega Peg Down at 30% Speed
   public void moveMegaPegDownLimitSwitch(){
     megaPegMotor.set(0.30);
   }
+
+  // Returns the value of the top limit switch
   public boolean getTopLimitSwitch(){
     return topLimitSwitch.get();
   }
 
+  // Returns the value of the bottom limit switch
   public boolean getBottomLimitSwitch(){
     return bottomLimitSwitch.get();
   }

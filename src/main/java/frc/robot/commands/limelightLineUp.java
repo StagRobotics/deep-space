@@ -40,17 +40,41 @@ public class limelightLineUp extends Command {
     x = x/100;
     if(area > 3.94){
       if(x > 0.0){
-        new drive(0.3+x, 0.3).execute();
+        new drive(0.2+x, 0.2).execute();
         SmartDashboard.putString("LimeLight", "Moving Right");
       } else if(x < 0.0){
-        new drive(0.3, 0.3-x).execute();
+        new drive(0.2, 0.2-x).execute();
         SmartDashboard.putString("LimeLight", "Moving Left");
       } else {
-        new drive(0.3,0.3).execute();
+        new drive(0.2,0.2).execute();
         SmartDashboard.putString("LimeLight", "Moving Straight");
         SmartDashboard.putNumber("Distance", areaGuess*area);
       }
     } else if(area > 8.4){
+      if(x > 0.0){
+        new drive(0.1+x, 0.1).execute();
+        SmartDashboard.putString("LimeLight", "Moving Right 10%");
+      } else if(x < 0.0){
+        new drive(0.1, 0.1-x).execute();
+        SmartDashboard.putString("LimeLight", "Moving Left 10%");
+      } else {
+        new drive(0.1,0.1).execute();
+        SmartDashboard.putString("LimeLight", "Moving Straight 10%");
+        SmartDashboard.putNumber("Distance", areaGuess*area);
+      }
+    } else if(area > 15){
+        if(x > 0.0){
+          new drive(0.05+x, 0.05).execute();
+          SmartDashboard.putString("LimeLight", "Moving Right 5%");
+        } else if(x < 0.0){
+          new drive(0.05, 0.05-x).execute();
+          SmartDashboard.putString("LimeLight", "Moving Left 5%");
+        } else {
+          new drive(0.05,0.05).execute();
+          SmartDashboard.putString("LimeLight", "Moving Straight 5%");
+          SmartDashboard.putNumber("Distance", areaGuess*area);
+        }
+    }else {
       if(x > 0.0){
         new drive(0.2+x, 0.2).execute();
         SmartDashboard.putString("LimeLight", "Moving Right");
@@ -62,37 +86,13 @@ public class limelightLineUp extends Command {
         SmartDashboard.putString("LimeLight", "Moving Straight");
         SmartDashboard.putNumber("Distance", areaGuess*area);
       }
-    } else if(area > 15){
-        if(x > 0.0){
-          new drive(0.1+x, 0.1).execute();
-          SmartDashboard.putString("LimeLight", "Moving Right");
-        } else if(x < 0.0){
-          new drive(0.1, 0.1-x).execute();
-          SmartDashboard.putString("LimeLight", "Moving Left");
-        } else {
-          new drive(0.1,0.1).execute();
-          SmartDashboard.putString("LimeLight", "Moving Straight");
-          SmartDashboard.putNumber("Distance", areaGuess*area);
-        }
-    }else {
-      if(x > 0.0){
-        new drive(0.4+x, 0.4).execute();
-        SmartDashboard.putString("LimeLight", "Moving Right");
-      } else if(x < 0.0){
-        new drive(0.4, 0.4-x).execute();
-        SmartDashboard.putString("LimeLight", "Moving Left");
-      } else {
-        new drive(0.4,0.4).execute();
-        SmartDashboard.putString("LimeLight", "Moving Straight");
-        SmartDashboard.putNumber("Distance", areaGuess*area);
-      }
     }
   }
 
   // Make this return true when this Command no longer needs to run execute()
   @Override
   protected boolean isFinished() {
-    if(ta.getDouble(0.0) > 45){
+    if(ta.getDouble(0.0) > 60){
       return true;
     } else {
       return false;

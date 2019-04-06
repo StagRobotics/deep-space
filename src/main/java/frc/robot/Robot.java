@@ -28,12 +28,10 @@ public class Robot extends TimedRobot {
     m_drivetrain = new DriveTrain();
     m_wheelyscoop = new WheelyScoop();
     m_oi =new OI();
-    //SmartDashboard.putData(Scheduler.getInstance());
   }
 
   @Override
   public void robotPeriodic() {
-    //SmartDashboard.putData(Scheduler.getInstance());
   }
 
   @Override
